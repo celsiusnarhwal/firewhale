@@ -136,7 +136,7 @@ by piping it to [jq](https://jqlang.github.io/jq/) or a similar program.
 Short answer: Don't worry about it, it'll probably work.
 
 Long answer: Firewhale should work with any iteration of the Docker API within major version `v1`, past, present,
-and future. It's designed to be forwards-compatible, so compatibility issues should be practically nonexistent. But
+and future. It's designed to be forward-compatible, so compatibility issues should be practically nonexistent. But
 if you find any, please [open an issue](https://github.com/celsiusnarhwal/firewhale/issues/new).
 
 ## Configuration
