@@ -107,7 +107,7 @@ to `containers` and `images`.
 > If the service's documentation doesn't tell you how to do this, setting the `DOCKER_HOST` environment variable will usually do the trick.
 
 > [!IMPORTANT]
-> Read access to the `events`, `ping`, and `version` endpoints is always granted, whether or not you do so explicitly.
+> Read access to the `events`, `_ping`, and `version` endpoints is always granted, whether or not you do so explicitly.
 > The information returned by these endpoints is mostly harmless, and most services that hook into the Docker socket
 > require these endpoints at a minimum.
 
