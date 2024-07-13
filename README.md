@@ -69,7 +69,7 @@ and write access to `containers` and `images`.
 
 > [!TIP]
 > Firewhale accepts endpoint names both with and without a leading forward slash (e.g., `containers` and `/containers`
-> are both valid.
+> are both valid).
 
 ### The `all` value
 
