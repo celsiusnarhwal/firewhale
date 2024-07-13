@@ -58,7 +58,7 @@ services:
     container_name: foobar
     restart: unless-stopped
   environment:
-    - DOCKER_HOST=http://firewhale:2375
+    DOCKER_HOST: http://firewhale:2375
   labels:
     firewhale.read: containers images networks volumes
     firewhale.write: containers images
@@ -92,7 +92,7 @@ services:
     container_name: foobar
     restart: unless-stopped
   environment:
-    - DOCKER_HOST=http://firewhale:2375
+    DOCKER_HOST: http://firewhale:2375
   labels:
     firewhale.read: all
     firewhale.write: containers images
