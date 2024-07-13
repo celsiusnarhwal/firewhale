@@ -33,8 +33,7 @@ Firewhale will be accessible from containers with which it shares a network at `
 A service's access to the Docker socket can be controlled with labels. The `firewhale.read` label controls
 which Docker API endpoints a service can read from (i.e., send `GET` and `HEAD` requests to) and the `firewhale.write`
 label controls which Docker API endpoints a service can write to
-(i.e., additonally send `POST`, `PUT`, `PATCH`, and `DELETE` requests to). Endpoints designated as writeable
-are implicitly also considered readable. The value of each label should be a space-separated list of
+(i.e., additonally send `POST`, `PUT`, `PATCH`, and `DELETE` requests to). The value of each label should be a space-separated list of
 endpoints the service should be able to read or write to.
 
 Take a look at this example:
@@ -63,8 +62,11 @@ In this example, `foobar` has read access to the `containers`, `images`, `networ
 and write access to `containers` and `images`.
 
 > [!IMPORTANT]
-> Only containers with either or both of the `firewhale.read` and `firewhale.write` labels can access the Docker socket
+> Only services with either or both of the `firewhale.read` and `firewhale.write` labels can access the Docker socket
 > through Firewhale.
+
+> [!TIP]
+> Services can implicitly read from any endpoints that they can also write to.
 
 ### The `all` value
 
