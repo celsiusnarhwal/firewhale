@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "firewhale"
+version = "0.1.0"
+description = ""
+authors = ["celsius narhwal <hello@celsiusnarhwal.dev>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+jinja2 = "^3.1.4"
+docker = "^7.1.0"
+pydantic = "^2.8.2"
+typer = {extras = ["all"], version = "^0.12.3"}
+path = "^16.14.0"
+loguru = "^0.7.2"
+
+[tool.poetry.scripts]
+firewhale = "firewhale.main:app"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

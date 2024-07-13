@@ -1,0 +1,21 @@
+:{{ port }} {
+    map {path} {endpoint} {
+        ~^(?:\/v[0-9.]+)?\/([^\/?]+) "${1}"
+    }
+
+    {% for matcher in matchers %}
+    @{{ matcher.name }} {
+        {% for rule in matcher.rules -%}
+        {{ rule }}
+        {% endfor %}
+    }
+
+    handle @{{ matcher.name }} {
+        reverse_proxy unix///var/run/docker.sock
+    }
+    {% endfor %}
+
+    handle {
+        respond {{ fallback_status_code }}
+    }
+}
