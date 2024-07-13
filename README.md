@@ -140,7 +140,7 @@ Some aspects of Firewhale can be configured via environment variables.
 | `FIREWHALE_PORT`             | The port Firewhale should listen on. Firewhale will be accessible at `http://firewhale:${FIREWHALE_PORT}`. Must be an integer between 0 and 65535.                                                                     | 2375        |
 | `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 699. | 403         |
 | `FIREWHALE_REFRESH_INTERVAL` | The interval, in seconds, at which Firewhale will query Docker for any updates to your services' labels and update its rules accordingly.                                                                              | 30          |
-| `FIREWHALE_LABEL_PREFIX`     | The prefix which with Firewhale labels will begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                             | `firewhale` |
+| `FIREWHALE_LABEL_PREFIX`     | The prefix which with Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                           | `firewhale` |
 
 Firewhale uses Docker's [official Python SDK](https://github.com/docker/docker-py) and will thus honor the
 `DOCKER_HOST`, `DOCKER_TLS_VERIFY`, and `DOCKER_CERT_PATH` environment variables if they are set.
