@@ -74,7 +74,7 @@ and write access to `containers` and `images`.
 ### The `all` value
 
 Both the `firewhale.read` and `firewhale.write` labels accept a special value called `all`. `all` grants
-unrestricted read or write access to the Docker socket and is equivalent specifying each endpoint individually.
+unrestricted read or write access to the Docker socket and is equivalent to specifying each endpoint individually.
 
 Iterating on the previous example:
 
