@@ -66,7 +66,7 @@ services:
 In this example, `foobar` has read access to the `containers`, `images`, `networks`, and `volumes` endpoints
 and write access to `containers` and `images`.
 
-> [!CAUTION]
+> [!WARNING]
 > Firewhale only works with services it shares a network with. `firewhale` labels on services that don't share a network
 > with Firewhale will be ignored.
 
