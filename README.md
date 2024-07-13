@@ -10,7 +10,7 @@ However, some services require access to the Docker socket for various reasons. 
 limited, per-service, access to the Docker socket, allowing you to control what individual services can and cannot
 see and do.
 
-> [!IMPORTANT]
+> [!INFO]
 > Firewhale is designed to be used with other Docker containers. If you need a proxy for use with non-containerized
 > services, see [Tecnativa/docker-socket-proxy](https://github.com/tecnativa/docker-socket-proxy).
 
