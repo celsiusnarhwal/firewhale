@@ -33,6 +33,7 @@ services:
 ```
 
 Firewhale will be accessible from services with which it shares a network at `http://firewhale:2375`.
+Firewhale only works with containers it shares a network with.
 
 A service's access to the Docker socket can be controlled with labels. The `firewhale.read` label controls
 which Docker API endpoints a service can read from (i.e., send `GET` and `HEAD` requests to) and the `firewhale.write`
@@ -66,9 +67,9 @@ services:
 In this example, `foobar` has read access to the `containers`, `images`, `networks`, and `volumes` endpoints
 and write access to `containers` and `images`.
 
-> [!WARNING]
-> Firewhale only works with services it shares a network with. `firewhale` labels on services that don't share a network
-> with Firewhale will be ignored.
+> [!TIP]
+> Firewhale accepts endpoint names both with and without a leading forward slash (e.g., `containers` and `/containers`
+> are both valid.
 
 ### The `all` value
 
