@@ -63,8 +63,8 @@ services:
     firewhale.write: containers images
 ```
 
-In this example, `foobar` has read access to the `/containers`, `/images`, `/networks`, and `/volumes` endpoints
-and write access to `/containers` and `/images`.
+In this example, `foobar` has read access to the `containers`, `images`, `networks`, and `volumes` endpoints
+and write access to `containers` and `images`.
 
 > [!TIP]
 > Configuring a service to use Firewhale means setting Firewhale as its Docker host. If the service's documentation
