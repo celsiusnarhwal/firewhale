@@ -30,7 +30,7 @@ services:
 
 Firewhale will be accessible from containers with which it shares a network at `http://firewhale:2375`.
 
-A service's level of access to the Docker socket can be controlled with labels. The `firewhale.read` label controls
+A service's access to the Docker socket can be controlled with labels. The `firewhale.read` label controls
 which Docker API endpoints a service can read from (i.e., send `GET` and `HEAD` requests to) and the `firewhale.write`
 label controls which Docker API endpoints a service can write to
 (i.e., additonally send `POST`, `PUT`, `PATCH`, and `DELETE` requests to). Endpoints designated as writeable
