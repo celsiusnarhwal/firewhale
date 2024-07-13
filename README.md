@@ -102,10 +102,6 @@ services:
 In this example, `foobar` has read access to all endpoints and write access
 to `containers` and `images`.
 
-> [!TIP]
-> Configuring a service to use Firewhale means making it use Firewhale as its Docker daemon socket. 
-> If the service's documentation doesn't tell you how to do this, setting the `DOCKER_HOST` environment variable will usually do the trick.
-
 > [!IMPORTANT]
 > Read access to the [`events`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemEvents), 
 > [`_ping`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemPing), and 
