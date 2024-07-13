@@ -81,6 +81,7 @@ def generate(json: bool = typer.Option(False, "--json")):
 
             if "all" not in writeable:
                 rules.append("vars {endpoint} " + " ".join(writeable))
+                rules[0].replace("ping", "_ping")
 
             matchers.append(
                 Matcher(name=f"firewhale_{container.name}_write", rules=rules)
@@ -94,6 +95,7 @@ def generate(json: bool = typer.Option(False, "--json")):
             if "all" not in readable:
                 readable = set(readable).union({"events", "ping", "version"})
                 rules.append("vars {endpoint} " + " ".join(readable))
+                rules[0].replace("ping", "_ping")
 
             matchers.append(
                 Matcher(name=f"firewhale_{container.name}_read", rules=rules)
