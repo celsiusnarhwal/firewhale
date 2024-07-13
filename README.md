@@ -14,7 +14,7 @@ see and do.
 > Firewhale is designed to be used with other Docker containers. If you need a proxy for use with non-containerized
 > services, see [Tecnativa/docker-socket-proxy](https://github.com/tecnativa/docker-socket-proxy).
 
-> [!IMPORTANT]
+> [!WARNING]
 > Do you use [Watchtower](https://containarrr.dev/watchtower)? [Read this](#a-note-on-watchtower) 
 > before using Firewhale.
 
