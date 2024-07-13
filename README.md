@@ -130,7 +130,7 @@ You can also view the configuration in Caddy's canonical JSON:
 docker exec firewhale firewhale generate --json
 ```
 
-The JSON output produced this command is always minified. You can prettify it
+The JSON output produced by this command is always minified. You can prettify it
 by piping it to [jq](https://jqlang.github.io/jq/) or a similar program.
 
 ## Configuration
