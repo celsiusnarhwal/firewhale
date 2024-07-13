@@ -114,7 +114,7 @@ to `containers` and `images`.
 
 Firewhale uses [Caddy](https://caddyserver.com) as its reverse proxy and dynamically generates
 a [Caddyfile](https://caddyserver.com/docs/caddyfile)
-from your services' `firewhale.read` and `firewhale.write`.
+from your services' `firewhale.read` and `firewhale.write` labels.
 The [`remote_ip`](https://caddyserver.com/docs/caddyfile/matchers#remote-ip)
 request matcher allows Firewhale to support different levels of access for each service.
 
