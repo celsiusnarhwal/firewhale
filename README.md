@@ -37,10 +37,6 @@ label controls which Docker API endpoints a service can write to
 are implicitly also considered readable. The value of each label should be a space-separated list of
 endpoints the service should be able to read or write to.
 
-> [!TIP]
-> Only containers with either or both of the `firewhale.read` and `firewhale.write` labels can access the Docker socket
-> through Firewhale.
-
 Take a look at this example:
 
 ```yaml
@@ -66,10 +62,39 @@ services:
 In this example, `foobar` has read access to the `containers`, `images`, `networks`, and `volumes` endpoints
 and write access to `containers` and `images`.
 
+> [!IMPORTANT]
+> Only containers with either or both of the `firewhale.read` and `firewhale.write` labels can access the Docker socket
+> through Firewhale.
+
 ### The `all` value
 
 Both the `firewhale.read` and `firewhale.write` labels accept a special value called `all`. `all` grants
 unrestricted read or write access to the Docker socket and is a shortcut for specifying each endpoint individually.
+
+Iterating on the previous example:
+
+```yaml
+services:
+  firewhale:
+    image: ghcr.io/celsiusnarhwal/firewhale
+    container_name: firewhale
+    restart: unless-stopped
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+
+  foobar:
+    image: foo/bar
+    container_name: foobar
+    restart: unless-stopped
+  environment:
+    - DOCKER_HOST=http://firewhale:2375
+  labels:
+    firewhale.read: all
+    firewhale.write: containers images
+```
+
+In this example, `foobar` has read access to all endpoints and write access
+to `containers` and `images`.
 
 > [!TIP]
 > Configuring a service to use Firewhale means setting Firewhale as its Docker host. If the service's documentation
