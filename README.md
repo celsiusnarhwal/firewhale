@@ -15,7 +15,7 @@ see and do.
 > services, see [Tecnativa/docker-socket-proxy](https://github.com/tecnativa/docker-socket-proxy).
 
 > [!WARNING]
-> Do you use [Watchtower](https://containarrr.dev/watchtower)? [Read this](#a-note-on-watchtower) 
+> Do you use [Watchtower](https://containarrr.dev/watchtower)? [Read this](#a-note-on-watchtower)
 > before using Firewhale.
 
 ## Usage
@@ -37,7 +37,8 @@ Firewhale will be accessible from containers with which it shares a network at `
 A service's access to the Docker socket can be controlled with labels. The `firewhale.read` label controls
 which Docker API endpoints a service can read from (i.e., send `GET` and `HEAD` requests to) and the `firewhale.write`
 label controls which Docker API endpoints a service can write to
-(i.e., additonally send `POST`, `PUT`, `PATCH`, and `DELETE` requests to). The value of each label should be a space-separated list of
+(i.e., additonally send `POST`, `PUT`, `PATCH`, and `DELETE` requests to). The value of each label should be a
+space-separated list of
 endpoints the service should be able to read or write to.
 
 Take a look at this example:
@@ -103,10 +104,10 @@ In this example, `foobar` has read access to all endpoints and write access
 to `containers` and `images`.
 
 > [!IMPORTANT]
-> Read access to the [`events`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemEvents), 
-> [`_ping`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemPing), and 
-> [`version`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemInfo) endpoints is always granted, 
-> whether or not you do so explicitly. The information returned by these endpoints is mostly harmless, and most 
+> Read access to the [`events`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemEvents),
+> [`_ping`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemPing), and
+> [`version`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemInfo) endpoints is always granted,
+> whether or not you do so explicitly. The information returned by these endpoints is mostly harmless, and most
 > services that hook into the Docker socket require these endpoints at a minimum.
 
 ## How It Works
@@ -138,7 +139,7 @@ Some aspects of Firewhale can be configured via environment variables.
 
 | **Environment Variable**     | **Description**                                                                                                                                                                                                             | **Default** |
 |------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| `FIREWHALE_PORT`             | The port Firewhale should listen on. Firewhale will be accessible at `https://firewhale:${FIREWHALE_PORT}`. Must be an integer between 0 and 65535.                                                                         | 2375        |
+| `FIREWHALE_PORT`             | The port Firewhale should listen on. Firewhale will be accessible at `http://firewhale:${FIREWHALE_PORT}`. Must be an integer between 0 and 65535.                                                                          | 2375        |
 | `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request that it has not been configured to allow. Must be an integer between 100 and 699. | 403         |
 | `FIREWHALE_REFRESH_INTERVAL` | The interval, in seconds, at which Firewhale will query Docker for any updates to your services' labels and update its rules accordingly.                                                                                   | 30          |
 | `FIREWHALE_LABEL_PREFIX`     | The prefix which with Firewhale labels will begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                                  | `firewhale` |
