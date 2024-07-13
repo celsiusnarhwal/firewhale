@@ -1,6 +1,14 @@
 on:
   push:
+    paths-ignore:
+      - README.md
+      - LICENSE.md
+
   workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build-and-push:
