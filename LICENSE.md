@@ -1,6 +1,6 @@
 # The MIT License (MIT)
 
-Copyright © 2024 celsius narhwal
+Copyright © 2024-present celsius narhwal
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
