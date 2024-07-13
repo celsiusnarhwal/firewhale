@@ -78,10 +78,13 @@ def generate(json: bool = typer.Option(False, "--json")):
         if writeable := container.labels.get(f"{label_prefix}.write"):
             writeable = [endpoint.lstrip("/") for endpoint in writeable.split(" ")]
             rules = [remote_ip_rule]
+            
+            if "ping" in writeable:
+                writeable.remove("ping")
+                writeable.append("_ping")
 
             if "all" not in writeable:
-                rules.append("vars {endpoint} " + " ".join(writeable))
-                rules[0].replace("ping", "_ping")
+                rules.append("vars {endpoint} " + " ".join(writeable)))
 
             matchers.append(
                 Matcher(name=f"firewhale_{container.name}_write", rules=rules)
@@ -91,11 +94,14 @@ def generate(json: bool = typer.Option(False, "--json")):
         if readable := container.labels.get(f"{label_prefix}.read"):
             readable = [endpoint.lstrip("/") for endpoint in readable.split(" ")]
             rules = [remote_ip_rule, "method GET HEAD"]
-
+            
+            if "ping" in readable:
+                readable.remove("ping")
+                readable.append("_ping")
+                
             if "all" not in readable:
-                readable = set(readable).union({"events", "ping", "version"})
+                readable = set(readable).union({"events", "_ping", "version"})
                 rules.append("vars {endpoint} " + " ".join(readable))
-                rules[0].replace("ping", "_ping")
 
             matchers.append(
                 Matcher(name=f"firewhale_{container.name}_read", rules=rules)
