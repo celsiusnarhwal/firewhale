@@ -70,7 +70,7 @@ and write access to `containers` and `images`.
 > through Firewhale.
 
 > [!TIP]
-> Services can implicitly read from any endpoints they can also write to.
+> Services can implicitly read from any endpoints they can write to.
 
 ### The `all` value
 
