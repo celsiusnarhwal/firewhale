@@ -161,4 +161,4 @@ If Watchtower tries to update Firewhale while using it as its Docker daemon sock
 API after stopping Firewhale and will not be able to complete its update routine. Naturally, this will break anything
 depending on Firewhale and any other containers Watchtower stopped during the update routine will be left as such.
 
-See [Watchtower's documentation](https://containrrr.dev/watchtower/container-selection/#monitor_only) for more.
+See [Watchtower's documentation](https://containrrr.dev/watchtower/container-selection/#monitor_only) for more info.
