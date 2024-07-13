@@ -84,7 +84,7 @@ def generate(json: bool = typer.Option(False, "--json")):
                 writeable.append("_ping")
 
             if "all" not in writeable:
-                rules.append("vars {endpoint} " + " ".join(writeable)))
+                rules.append("vars {endpoint} " + " ".join(writeable))
 
             matchers.append(
                 Matcher(name=f"firewhale_{container.name}_write", rules=rules)
