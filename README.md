@@ -66,21 +66,20 @@ services:
 In this example, `foobar` has read access to the `containers`, `images`, `networks`, and `volumes` endpoints
 and write access to `containers` and `images`.
 
-> [!TIP]
-> Configuring a service to use Firewhale means setting Firewhale as its Docker host. If the service's documentation
-> doesn't tell you how to do this (and oftentimes even if it _does_ tell you a specific way to do this), setting
-> the `DOCKER_HOST` environment variable will usually do the trick.
-
-> [!IMPORTANT]
-> Read access to the `events`, `ping`, and `version` endpoints is always granted, whether or not you do so explicitly.
-> The information returned by these endpoints is mostly harmless, and most services that hook into the Docker socket
-> require these endpoints at a minimum.
-
 ### The `all` value
 
 Both the `firewhale.read` and `firewhale.write` labels accept a special value called `all`. `all` grants
 unrestricted read or write access to the Docker socket and is a shortcut for specifying each endpoint individually.
 
+> [!TIP]
+> Configuring a service to use Firewhale means setting Firewhale as its Docker host. If the service's documentation
+> doesn't tell you how to do this, setting the `DOCKER_HOST` environment variable will usually do the trick.
+
+> [!IMPORTANT]
+> Read access to the `events`, `ping`, and `version` endpoints is always granted, whether or not you do so explicitly.
+> The information returned by these endpoints is mostly harmless, and most services that hook into the Docker socket
+> require these endpoints at a minimum.
+> 
 ## How It Works
 
 Firewhale uses [Caddy](https://caddyserver.com) as its reverse proxy and dynamically generates
