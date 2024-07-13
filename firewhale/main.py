@@ -33,7 +33,7 @@ def generate(json: bool = typer.Option(False, "--json")):
     status_code_ta = TypeAdapter(t.Annotated[int, Field(ge=100, le=599)])
 
     try:
-        port = port_ta.validate_python(os.getenv("PORT", 2375))
+        port = port_ta.validate_python(os.getenv("FIREWHALE_PORT", 2375))
     except ValidationError:
         raise ValueError(
             "FIREWHALE_PORT must be an integer between and 65535."
