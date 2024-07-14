@@ -24,8 +24,8 @@ jobs:
       - name: Determine Tags
         shell: bash
         run: |
-          version=echo ${{ github.ref }} | awk -F '/' '{print $NF}'
-          major_version=echo ${version} | cut -d '.' -f 1
+          version=$(echo ${{ github.ref }} | awk -F '/' '{print $NF}')
+          major_version=$(echo ${version} | cut -d '.' -f 1)
           
           tags=()
           
