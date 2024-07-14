@@ -29,12 +29,11 @@ jobs:
       - name: Install CI Dependencies
         run: |
           pipx install poetry==$(cat .poetry-version)
-          poetry config virtualenvs.create false
-          sudo poetry install --no-root --only ci
+          poetry install --no-root --only ci
 
       - name: Determine Tags
         id: tags
-        shell: python
+        shell: poetry run python {0}
         run: |
           import os
           
