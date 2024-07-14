@@ -1,0 +1,46 @@
+on:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Authenticate to GHCR
+        run: echo ${{ github.token }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
+
+      - name: Determine Tags
+        id: tags
+        shell: python
+        run: |
+          import os
+          
+          import semver
+          
+          version = semver.Version.parse(os.getenv("GH_REF"))
+          tags = [f"ghcr.io/{os.getenv('GH_REPOSITORY')}:{tag}" for tag in ["latest", version.major, f"v{version.major}", version, f"v{version}"]]
+            
+          print(f"tags={','.join(tags)}", file=open(os.getenv("GITHUB_OUTPUT", "a")))
+        env:
+          GH_REF: ${{ github.ref }}
+          GH_REPOSITORY: ${{ github.repository }}
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          platforms: linux/amd64,linux/arm64
