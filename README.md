@@ -141,7 +141,7 @@ by piping it to [jq](https://jqlang.github.io/jq/) or a similar program.
 Some aspects of Firewhale can be configured via environment variables.
 
 | **Environment Variable**     | **Description**                                                                                                                                                                                                        | **Default** |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
 | `FIREWHALE_PORT`             | The port Firewhale should listen on. Firewhale will be accessible at `http://firewhale:${FIREWHALE_PORT}`. Must be an integer between 0 and 65535.                                                                     | 2375        |
 | `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 699. | 403         |
 | `FIREWHALE_REFRESH_INTERVAL` | The interval, in seconds, at which Firewhale will query Docker for any updates to your services' labels and update its rules accordingly.                                                                              | 30          |
@@ -166,9 +166,9 @@ See [Watchtower's documentation](https://containrrr.dev/watchtower/container-sel
 
 ## Available Tags
 
-| **Name**             | **Description**                                                                                        | **Example**                                                                                 |
-|----------------------|--------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
-| `latest`             | The latest stable version of Firewhale.                                                                | `ghcr.io/celsiusnarhwal/firewhale:latest`                                                   |
-| Major version number | The latest version of Firewhale with this major version number. May be optionally prefixed with a `v`. | - `ghcr.io/celsiusnarhwal/firewhale:1`<br/> - `ghcr.io/celsiusnarhwal/firewhale:v1`         |
-| Exact version number | This version of Firewhale exactly. May be optionally prefixed with a `v`.                              | - `ghcr.io/celsiusnarhwal/firewhale:1.0.0`<br/> - `ghcr.io/celsiusnarhwal/firewhale:v1.0.0` |
-| `head`                | The latest commit to Firewhale's `main` branch. Unstable.                                              | `ghcr.io/celsiusnarhwal/firewhale:head`                                                      |
+| **Name**             | **Description**                                                                                        | **Example**                                                                            |
+|----------------------|--------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| `latest`             | The latest stable version of Firewhale.                                                                | `ghcr.io/celsiusnarhwal/firewhale:latest`                                              |
+| Major version number | The latest version of Firewhale with this major version number. May be optionally prefixed with a `v`. | `ghcr.io/celsiusnarhwal/firewhale:1`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1`         |
+| Exact version number | This version of Firewhale exactly. May be optionally prefixed with a `v`.                              | `ghcr.io/celsiusnarhwal/firewhale:1.0.0`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1.0.0` |
+| `head`               | The latest commit to Firewhale's `main` branch. Unstable.                                              | `ghcr.io/celsiusnarhwal/firewhale:head`                                                |
