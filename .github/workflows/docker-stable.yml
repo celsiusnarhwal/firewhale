@@ -34,6 +34,7 @@ jobs:
           
           IFS=','
           
+          echo 'tags=${tags[*]}'
           echo 'tags=${tags[*]}' >> ${GITHUB_OUTPUT}
 
       - name: Build and Push Image
