@@ -52,16 +52,13 @@ def generate(json: bool = typer.Option(False, "--json")):
     matchers = []
 
     try:
-        firewhale = dc.containers.get(open("/etc/hostname").read().strip())
+        firewhale = dc.containers.get(os.getenv("FIREWHALE_OVERRIDING_CONTAINER_NAME", "firewhale"))
     except docker.errors.NotFound:
-        try:
-            firewhale = dc.containers.get(os.getenv("FIREWHALE_OVERRIDING_HOSTNAME"))
-        except docker.errors.NotFound:
-            raise docker.errors.NotFound(
-                "Firewhale was unable to identify its own container. If you overrode the hostname of Firewhale's"
-                "container, you must inform Firewhale of what the overriding hostname is via the "
-                "FIREWHALE_OVERRIDING_HOSTNAME environment variable."
-            ) from None
+        raise docker.errors.NotFound(
+            "Firewhale was unable to identify its own container. If you overrode the name of Firewhale's"
+            "container, you must set the FIREWHALE_OVERRIDING_CONTAINER_NAME environment variable to the overriding"
+            "name."
+        ) from None
 
     firewhale_networks = firewhale.attrs["NetworkSettings"]["Networks"]
 
