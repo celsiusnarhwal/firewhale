@@ -5,7 +5,7 @@ import typing as t
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-import docker as moby
+from docker import DockerClient
 import typer
 from jinja2 import Template
 from loguru import logger
@@ -21,7 +21,7 @@ HERE = Path(__file__).parent
 
 app = typer.Typer(no_args_is_help=True)
 
-docker = moby.from_env()
+docker = DockerClient("unix://var/run/docker.sock")
 
 
 @app.command("generate")
