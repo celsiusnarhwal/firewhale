@@ -78,10 +78,6 @@ def generate(json: bool = typer.Option(False, "--json")):
         if writeable := container.labels.get(f"{label_prefix}.write"):
             writeable = [endpoint.lstrip("/") for endpoint in writeable.split(" ")]
             rules = [remote_ip_rule]
-            
-            if "ping" in writeable:
-                writeable.remove("ping")
-                writeable.append("_ping")
 
             if "all" not in writeable:
                 rules.append("vars {endpoint} " + " ".join(writeable))
@@ -94,18 +90,20 @@ def generate(json: bool = typer.Option(False, "--json")):
         if readable := container.labels.get(f"{label_prefix}.read"):
             readable = [endpoint.lstrip("/") for endpoint in readable.split(" ")]
             rules = [remote_ip_rule, "method GET HEAD"]
-            
-            if "ping" in readable:
-                readable.remove("ping")
-                readable.append("_ping")
-                
+
             if "all" not in readable:
-                readable = set(readable).union({"events", "_ping", "version"})
                 rules.append("vars {endpoint} " + " ".join(readable))
 
             matchers.append(
                 Matcher(name=f"firewhale_{container.name}_read", rules=rules)
             )
+
+        # Write a request matcher for read access to /events, /_ping, and /version
+        matchers.append(Matcher(name=f"firewhale_{container.name}_basic", rules=[
+            remote_ip_rule,
+            "method GET HEAD",
+            "vars {endpoint} events _ping version"
+        ]))
 
     with TemporaryDirectory() as tmpdir:
         template = Template(
