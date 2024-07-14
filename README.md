@@ -150,8 +150,8 @@ Some aspects of Firewhale can be configured via environment variables.
 | `FIREWHALE_REFRESH_INTERVAL` | The interval, in seconds, at which Firewhale will query Docker for any updates to your services' labels and update its rules accordingly.                                                                              | 30          |
 | `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                           | `firewhale` |
 
-Firewhale uses Docker's [official Python SDK](https://github.com/docker/docker-py) and will thus honor the
-`DOCKER_HOST`, `DOCKER_TLS_VERIFY`, and `DOCKER_CERT_PATH` environment variables if they are set.
+> [!IMPORTANT]
+> Firewhale cannot be configured to connect to Docker daemon sockets other than `unix://var/run/docker.sock`.
 
 ## A note on Watchtower
 

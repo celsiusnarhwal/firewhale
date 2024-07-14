@@ -21,7 +21,7 @@ HERE = Path(__file__).parent
 
 app = typer.Typer(no_args_is_help=True)
 
-docker = DockerClient("unix://var/run/docker.sock")
+docker = DockerClient("unix:///var/run/docker.sock")
 
 
 @app.command("generate")
