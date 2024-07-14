@@ -52,7 +52,7 @@ def generate(json: bool = typer.Option(False, "--json")):
     matchers = []
 
     try:
-        firewhale = dc.containers.get(open("/etc/hostname").read())
+        firewhale = dc.containers.get(open("/etc/hostname").read().strip())
     except docker.errors.NotFound:
         try:
             firewhale = dc.containers.get(os.getenv("FIREWHALE_OVERRIDING_HOSTNAME"))
