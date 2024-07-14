@@ -28,7 +28,7 @@ jobs:
           
           tags=()
           
-          for tag in latest ${major_version} v${major_versiop} ${version} v${version}; do
+          for tag in latest ${major_version} v${major_version} ${version} v${version}; do
             tags+=ghcr.io/${{ github.repository_owner }}:${tag}
           
           IFS=','
