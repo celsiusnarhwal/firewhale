@@ -13,6 +13,7 @@ pydantic = "^2.8.2"
 typer = {extras = ["all"], version = "^0.12.3"}
 path = "^16.14.0"
 loguru = "^0.7.2"
+durationpy = "^0.7"
 
 [tool.poetry.scripts]
 firewhale = "firewhale.main:app"

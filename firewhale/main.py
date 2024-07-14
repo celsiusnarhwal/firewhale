@@ -5,9 +5,11 @@ import typing as t
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
+import durationpy
 import typer
 from docker import DockerClient
 from jinja2 import Template
+from datetime import datetime
 from loguru import logger
 from pydantic import Field, TypeAdapter, ValidationError
 
@@ -19,13 +21,16 @@ class Matcher(t.TypedDict):
 
 HERE = Path(__file__).parent
 
-app = typer.Typer(no_args_is_help=True)
+app = typer.Typer(no_args_is_help=True, add_completion=False)
 
-dc = DockerClient("unix://var/run/docker.sock")
+@app.command("generate", help="Generate a Caddy configuration for Firewhale.")
+def generate(
+    json: bool = typer.Option(
+        False, "--json", help="Generate a JSON configuration instead of a Caddyfile."
+    )
+):
+    dc = DockerClient("unix://var/run/docker.sock")
 
-
-@app.command("generate")
-def generate(json: bool = typer.Option(False, "--json")):
     label_prefix = os.getenv("FIREWHALE_LABEL_PREFIX", "firewhale")
 
     # Validate FIREWHALE_PORT and FIREWHALE_HTTP_STATUS_CODE values
@@ -115,8 +120,22 @@ def generate(json: bool = typer.Option(False, "--json")):
             print(caddyfile.read_text())
 
 
-@app.callback()
-def main(): ...
+@app.command("duration", hidden=True)
+def duration(d: str):
+    try:
+        print(durationpy.from_str(d).total_seconds())
+    except ValueError:
+        raise ValueError(
+            "FIREWHALE_REFRESH_INTERVAL must be a valid Go-style duration string. "
+            "https://pkg.go.dev/time#ParseDuration"
+        ) from None
+
+
+@app.callback(epilog=f"© {datetime.now().astimezone().year} celsius narhwal. Thank you kindly for your attention.")
+def main():
+    """
+    Firewhale is a proxy for the Docker socket.
+    """
 
 
 logger.remove()
