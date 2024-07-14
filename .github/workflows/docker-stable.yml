@@ -21,6 +21,11 @@ jobs:
       - name: Authenticate to GHCR
         run: echo ${{ github.token }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
+      - name: Install CI Dependencies
+        run: |
+          pipx install poetry==$(cat .poetry-version)
+          poetry install --no-root --only ci
+
       - name: Determine Tags
         id: tags
         shell: python
