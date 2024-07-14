@@ -21,20 +21,31 @@ jobs:
       - name: Authenticate to GHCR
         run: echo ${{ github.token }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
+      - name: Set Up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install CI Dependencies
+        run: |
+          pipx install poetry==$(cat .poetry-version)
+          poetry install --no-root --only ci
+
       - name: Determine Tags
         id: tags
-        shell: bash
+        shell: poetry run python {0}
         run: |
-          version=$(echo ${{ github.ref }} | awk -F '/' '{print $NF}')
-          major_version=$(echo ${version} | cut -d '.' -f 1)
+          import os
           
-          tags=()
+          import semver
           
-          for tag in latest ${major_version} v${major_version} ${version} v${version}; do
-            tags+=ghcr.io/${{ github.repository_owner }}:${tag}
-          done
+          version = semver.Version.parse(os.getenv("GH_REF").split("/")[-1])
+          tags = [f"ghcr.io/{os.getenv('GH_REPOSITORY')}:{tag}" for tag in ["latest", version.major, f"v{version.major}", version, f"v{version}"]]
           
-          printf %s, ${arr[@]} >> ${GITHUB_OUTPUT}
+          print(f"tags={','.join(tags)}", file=open(os.getenv("GITHUB_OUTPUT"), "a"))
+        env:
+          GH_REF: ${{ github.ref }}
+          GH_REPOSITORY: ${{ github.repository }}
 
       - name: Build and Push Image
         uses: docker/build-push-action@v4
