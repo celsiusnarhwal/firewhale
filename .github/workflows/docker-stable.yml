@@ -23,7 +23,7 @@ jobs:
 
       - name: Determine Tags
         run: |
-          version=echo '${{ github.ref }}' | awk -F '/' '{print $NF}'
+          version=echo "${{ github.ref }}" | awk -F '/' '{print $NF}'
           major_version=echo '${version}' | cut -d '.' -f 1
           
           tags=()
