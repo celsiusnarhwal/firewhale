@@ -22,6 +22,7 @@ jobs:
         run: echo ${{ github.token }} | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
 
       - name: Determine Tags
+        id: tags
         shell: bash
         run: |
           version=$(echo ${{ github.ref }} | awk -F '/' '{print $NF}')
