@@ -33,7 +33,9 @@ services:
 ```
 
 Firewhale will be accessible from services with which it shares a network at `http://firewhale:2375`.
-Firewhale only works with containers it shares a network with.
+
+> [!IMPORTANT]
+> Firewhale only works with services it shares a network with.
 
 A service's access to the Docker socket can be controlled with labels. The `firewhale.read` label controls
 which Docker API endpoints a service can read from (i.e., send `GET` and `HEAD` requests to) and the `firewhale.write`
@@ -66,6 +68,8 @@ services:
 
 In this example, `foobar` has read access to the `containers`, `images`, `networks`, and `volumes` endpoints
 and write access to `containers` and `images`.
+
+You can find an exhaustive list of endpoints in the [Docker Engine API documentation](https://docs.docker.com/engine/api/version-history/).
 
 > [!TIP]
 > Firewhale accepts endpoint names both with and without a leading forward slash (e.g., `containers` and `/containers`
@@ -104,8 +108,8 @@ to `containers` and `images`.
 > [!IMPORTANT]
 > Read access to the [`events`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemEvents),
 > [`_ping`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemPing), and
-> [`version`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemInfo) endpoints is always granted,
-> whether or not you do so explicitly. The information returned by these endpoints is mostly harmless, and most
+> [`version`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemVersion) endpoints is always granted,
+> whether or not you do so explicitly. The information returned by these endpoints is practically harmless, and most
 > services that hook into the Docker socket require these endpoints at a minimum.
 
 ## How It Works
@@ -130,14 +134,6 @@ docker exec firewhale firewhale generate --json
 
 The JSON output produced by this command is always minified. You can prettify it
 by piping it to [jq](https://jqlang.github.io/jq/) or a similar program.
-
-## Docker API Compatibility
-
-Short answer: Don't worry about it, it'll probably work.
-
-Long answer: Firewhale should work with any iteration of the Docker API within major version `v1`, past, present,
-and future. It's designed to be forward-compatible, so compatibility issues should be practically nonexistent. But
-if you find any, please [open an issue](https://github.com/celsiusnarhwal/firewhale/issues/new).
 
 ## Configuration
 
@@ -164,4 +160,4 @@ If Watchtower tries to update Firewhale while using it as its Docker daemon sock
 API after stopping Firewhale and will not be able to complete its update routine. Naturally, this will break anything
 depending on Firewhale and any other containers Watchtower stopped during the update routine will be left as such.
 
-See [Watchtower's documentation](https://containrrr.dev/watchtower/container-selection/#monitor_only) for more info.
+See [Watchtower's documentation](https://containrrr.dev/watchtower/container-selection) for more info.
