@@ -15,7 +15,7 @@ see and do.
 > services, see [Tecnativa/docker-socket-proxy](https://github.com/tecnativa/docker-socket-proxy).
 
 > [!WARNING]
-> Do you use [Watchtower](https://containarrr.dev/watchtower)? [Read this](#a-note-on-watchtower)
+> Do you use [Watchtower](https://containrrr.dev/watchtower)? [Read this](#a-note-on-watchtower)
 > before using Firewhale.
 
 ## Usage
