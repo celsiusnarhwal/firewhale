@@ -139,13 +139,13 @@ by piping it to [jq](https://jqlang.github.io/jq/) or a similar program.
 
 Some aspects of Firewhale can be configured via environment variables.
 
-| **Environment Variable**              | **Description**                                                                                                                                                                                                        | **Default** |
-|---------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| `FIREWHALE_PORT`                      | The port Firewhale should listen on. Firewhale will be accessible at `http://firewhale:${FIREWHALE_PORT}`. Must be an integer between 0 and 65535.                                                                     | 2375        |
-| `FIREWHALE_HTTP_STATUS_CODE`          | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 699. | 403         |
-| `FIREWHALE_REFRESH_INTERVAL`          | The interval, in seconds, at which Firewhale will query Docker for any updates to your services' labels and update its rules accordingly.                                                                              | 30          |
-| `FIREWHALE_LABEL_PREFIX`              | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                           | `firewhale` |
-| `FIREWHALE_OVERRIDING_CONTAINER_NAME` | If the name of Firewhale's container is anything other than `firewhale`, you must set this environment variable to the container's name.                                                                               | N/A         |
+| **Environment Variable**     | **Description**                                                                                                                                                                                                        | **Default** |
+|------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
+| `FIREWHALE_PORT`             | The port Firewhale should listen on. Firewhale will be accessible at `http://firewhale:${FIREWHALE_PORT}`. Must be an integer between 0 and 65535.                                                                     | 2375        |
+| `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 699. | 403         |
+| `FIREWHALE_REFRESH_INTERVAL` | The interval, in seconds, at which Firewhale will query Docker for any updates to your services' labels and update its rules accordingly.                                                                              | 30          |
+| `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                           | `firewhale` |
+| `FIREWHALE_CONTAINER_NAME`   | This environment variable must be set to the name of Firewhale's container.                                                                                                                                            | `firewhale` |
 
 > [!IMPORTANT]
 > Firewhale cannot be configured to connect to Docker daemon sockets other than `unix:///var/run/docker.sock`.
