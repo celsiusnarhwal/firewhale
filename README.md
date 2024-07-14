@@ -151,7 +151,7 @@ Some aspects of Firewhale can be configured via environment variables.
 | `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                           | `firewhale` |
 
 > [!IMPORTANT]
-> Firewhale cannot be configured to connect to Docker daemon sockets other than `unix://var/run/docker.sock`.
+> Firewhale cannot be configured to connect to Docker daemon sockets other than `unix:///var/run/docker.sock`.
 
 ## A note on Watchtower
 
