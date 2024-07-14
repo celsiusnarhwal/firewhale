@@ -39,8 +39,8 @@ jobs:
           
           import semver
           
-          version = semver.Version.parse(os.getenv("GH_REF").split("/")[-1])
-          tags = [f"ghcr.io/{os.getenv('GH_REPOSITORY')}:{tag}" for tag in ["latest", version.major, f"v{version.major}", version, f"v{version}"]]
+          version = semver.Version.parse(${{ github.ref }}.split("/")[-1])
+          tags = [f"ghcr.io/${{ github.repository }}:{tag}" for tag in ["latest", version.major, f"v{version.major}", version, f"v{version}"]]
           
           print(f"tags={','.join(tags)}", file=open(os.getenv("GITHUB_OUTPUT"), "a"))
         env:
