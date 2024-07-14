@@ -39,13 +39,10 @@ jobs:
           
           import semver
           
-          version = semver.Version.parse(${{ github.ref }}.split("/")[-1])
+          version = semver.Version.parse("${{ github.ref }}").split("/")[-1])
           tags = [f"ghcr.io/${{ github.repository }}:{tag}" for tag in ["latest", version.major, f"v{version.major}", version, f"v{version}"]]
           
           print(f"tags={','.join(tags)}", file=open(os.getenv("GITHUB_OUTPUT"), "a"))
-        env:
-          GH_REF: ${{ github.ref }}
-          GH_REPOSITORY: ${{ github.repository }}
 
       - name: Build and Push Image
         uses: docker/build-push-action@v4
