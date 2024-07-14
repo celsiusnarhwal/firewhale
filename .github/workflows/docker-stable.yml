@@ -31,10 +31,10 @@ jobs:
           
           for tag in latest ${major_version} v${major_version} ${version} v${version}; do
             tags+=ghcr.io/${{ github.repository_owner }}:${tag}
+          done
           
           IFS=','
           
-          echo 'tags=${tags[*]}'
           echo 'tags=${tags[*]}' >> ${GITHUB_OUTPUT}
 
       - name: Build and Push Image
