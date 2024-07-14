@@ -23,8 +23,8 @@ jobs:
 
       - name: Determine Tags
         run: |
-          version=echo ${{ github.ref }} | awk -F '/' '{print $NF}'
-          major_version=echo ${version} | cut -d '.' -f 1
+          version=echo '${{ github.ref }}' | awk -F '/' '{print $NF}'
+          major_version=echo '${version}' | cut -d '.' -f 1
           
           tags=()
           
@@ -33,7 +33,7 @@ jobs:
           
           IFS=','
           
-          echo tags=${tags[*]} >> ${GITHUB_OUTPUT}
+          echo 'tags=${tags[*]}' >> ${GITHUB_OUTPUT}
 
       - name: Build and Push Image
         uses: docker/build-push-action@v4
