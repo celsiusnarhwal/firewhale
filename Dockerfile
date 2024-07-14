@@ -12,7 +12,7 @@ COPY . /app
 
 WORKDIR /app
 
-RUN apt upgrade \
+RUN apt update \
     && apt install pipx \
     && pipx install poetry==$(cat .poetry-version) \
     && poetry config virtualenvs.create false \
