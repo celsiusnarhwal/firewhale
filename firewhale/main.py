@@ -6,8 +6,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import typer
-import docker
-import docker.errors
+from docker import DockerClient
 from jinja2 import Template
 from loguru import logger
 from pydantic import Field, TypeAdapter, ValidationError
@@ -22,7 +21,7 @@ HERE = Path(__file__).parent
 
 app = typer.Typer(no_args_is_help=True)
 
-dc = docker.DockerClient("unix://var/run/docker.sock")
+dc = DockerClient("unix://var/run/docker.sock")
 
 
 @app.command("generate")
@@ -51,32 +50,7 @@ def generate(json: bool = typer.Option(False, "--json")):
 
     matchers = []
 
-    try:
-        firewhale = dc.containers.get(os.getenv("FIREWHALE_OVERRIDING_CONTAINER_NAME", "firewhale"))
-    except docker.errors.NotFound:
-        raise docker.errors.NotFound(
-            "Firewhale was unable to identify its own container. If you overrode the name of Firewhale's"
-            "container, you must set the FIREWHALE_OVERRIDING_CONTAINER_NAME environment variable to the overriding"
-            "name."
-        ) from None
-
-    firewhale_networks = firewhale.attrs["NetworkSettings"]["Networks"]
-
-    for container in [ctr for ctr in dc.containers.list() if ctr is not firewhale]:
-        container_networks = container.attrs["NetworkSettings"]["Networks"]
-        reachable_networks = set(firewhale_networks.keys()).intersection(
-            container_networks.keys()
-        )
-
-        if not reachable_networks:
-            continue
-
-        ip_addresses = [
-            container_networks[network]["IPAddress"] for network in reachable_networks
-        ]
-
-        remote_ip_rule = "remote_ip " + " ".join(ip_addresses)
-
+    for container in dc.containers.list():
         read_label = container.labels.get(f"{label_prefix}.read")
         write_label = container.labels.get(f"{label_prefix}.write")
 
@@ -86,7 +60,7 @@ def generate(json: bool = typer.Option(False, "--json")):
                 Matcher(
                     name=f"{container.name}_basic",
                     rules=[
-                        remote_ip_rule,
+                        f"remote_host {container.name}",
                         "method GET HEAD",
                         "vars {endpoint} events _ping version",
                     ],
@@ -99,7 +73,7 @@ def generate(json: bool = typer.Option(False, "--json")):
                     endpoint.lstrip("/").casefold()
                     for endpoint in read_label.split(" ")
                 ]
-                rules = [remote_ip_rule, "method GET HEAD"]
+                rules = [f"remote_host {container.name}", "method GET HEAD"]
 
                 if "all" not in readable_endpoints:
                     rules.append("vars {endpoint} " + " ".join(readable_endpoints))
@@ -112,7 +86,7 @@ def generate(json: bool = typer.Option(False, "--json")):
                     endpoint.lstrip("/").casefold()
                     for endpoint in write_label.split(" ")
                 ]
-                rules = [remote_ip_rule]
+                rules = [f"remote_host {container.name}"]
 
                 if "all" not in writeable_endpoints:
                     rules.append("vars {endpoint} " + " ".join(writeable_endpoints))

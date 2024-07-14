@@ -1,4 +1,6 @@
-FROM caddy:2.8.4 AS caddy
+FROM caddy:2.8.4-builder AS caddy
+
+RUN xcaddy build --with github.com/muety/caddy-remote-host
 
 FROM python:3.12.1
 

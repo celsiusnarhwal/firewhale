@@ -116,10 +116,8 @@ to `containers` and `images`.
 ## How It Works
 
 Firewhale uses [Caddy](https://caddyserver.com) as its reverse proxy and dynamically generates
-a [Caddyfile](https://caddyserver.com/docs/caddyfile)
-from your services' `firewhale.read` and `firewhale.write` labels.
-The [`remote_ip`](https://caddyserver.com/docs/caddyfile/matchers#remote-ip)
-request matcher allows Firewhale to support different levels of access for each service.
+a [Caddyfile](https://caddyserver.com/docs/caddyfile) from your services' 
+`firewhale.read` and `firewhale.write` labels.
 
 You can see the Caddyfile Firewhale is currently using at any time:
 
@@ -146,7 +144,6 @@ Some aspects of Firewhale can be configured via environment variables.
 | `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 699. | 403         |
 | `FIREWHALE_REFRESH_INTERVAL` | The interval, in seconds, at which Firewhale will query Docker for any updates to your services' labels and update its rules accordingly.                                                                              | 30          |
 | `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                           | `firewhale` |
-| `FIREWHALE_CONTAINER_NAME`   | This environment variable must be set to the name of Firewhale's container.                                                                                                                                            | `firewhale` |
 
 > [!IMPORTANT]
 > Firewhale cannot be configured to connect to Docker daemon sockets other than `unix:///var/run/docker.sock`.
