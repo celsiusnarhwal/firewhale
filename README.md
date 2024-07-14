@@ -101,6 +101,8 @@ services:
 In this example, `foobar` has read access to all endpoints and write access
 to `containers` and `images`.
 
+You can find an exhaustive list of endpoints in the [Docker Engine API documentation](https://docs.docker.com/engine/api/version-history/).
+
 > [!IMPORTANT]
 > Read access to the [`events`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemEvents),
 > [`_ping`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemPing), and
