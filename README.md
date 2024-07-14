@@ -107,7 +107,7 @@ to `containers` and `images`.
 > Read access to the [`events`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemEvents),
 > [`_ping`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemPing), and
 > [`version`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemVersion) endpoints is always granted,
-> whether or not you do so explicitly. The information returned by these endpoints is mostly harmless, and most
+> whether or not you do so explicitly. The information returned by these endpoints is practically harmless, and most
 > services that hook into the Docker socket require these endpoints at a minimum.
 
 ## How It Works
