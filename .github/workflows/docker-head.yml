@@ -3,7 +3,7 @@ on:
     paths-ignore:
       - README.md
       - LICENSE.md
-      - .github/workflows/docker-head.yml
+      - .github/workflows/docker-stable.yml
 
   workflow_dispatch:
 
