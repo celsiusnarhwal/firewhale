@@ -5,8 +5,8 @@ import typing as t
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from docker import DockerClient
 import typer
+from docker import DockerClient
 from jinja2 import Template
 from loguru import logger
 from pydantic import Field, TypeAdapter, ValidationError
@@ -74,36 +74,40 @@ def generate(json: bool = typer.Option(False, "--json")):
 
         remote_ip_rule = "remote_ip " + " ".join(ip_addresses)
 
+        writeable = container.labels.get(f"{label_prefix}.write")
+        readable = container.labels.get(f"{label_prefix}.read")
+
         # Write a request matcher for all methods
-        if writeable := container.labels.get(f"{label_prefix}.write"):
-            writeable = [endpoint.lstrip("/") for endpoint in writeable.split(" ")]
+        if writeable:
+            writeable_endpoints = [endpoint.lstrip("/") for endpoint in writeable.split(" ")]
             rules = [remote_ip_rule]
 
-            if "all" not in writeable:
-                rules.append("vars {endpoint} " + " ".join(writeable))
+            if "all" not in writeable_endpoints:
+                rules.append("vars {endpoint} " + " ".join(writeable_endpoints))
 
             matchers.append(
                 Matcher(name=f"firewhale_{container.name}_write", rules=rules)
             )
 
         # Write a request matcher for GET and HEAD only
-        if readable := container.labels.get(f"{label_prefix}.read"):
-            readable = [endpoint.lstrip("/") for endpoint in readable.split(" ")]
+        if readable:
+            readable_endpoints = [endpoint.lstrip("/") for endpoint in readable.split(" ")]
             rules = [remote_ip_rule, "method GET HEAD"]
 
-            if "all" not in readable:
-                rules.append("vars {endpoint} " + " ".join(readable))
+            if "all" not in readable_endpoints:
+                rules.append("vars {endpoint} " + " ".join(readable_endpoints))
 
             matchers.append(
                 Matcher(name=f"firewhale_{container.name}_read", rules=rules)
             )
 
         # Write a request matcher for read access to /events, /_ping, and /version
-        matchers.append(Matcher(name=f"firewhale_{container.name}_basic", rules=[
-            remote_ip_rule,
-            "method GET HEAD",
-            "vars {endpoint} events _ping version"
-        ]))
+        if readable or writeable:
+            matchers.append(Matcher(name=f"firewhale_{container.name}_basic", rules=[
+                remote_ip_rule,
+                "method GET HEAD",
+                "vars {endpoint} events _ping version"
+            ]))
 
     with TemporaryDirectory() as tmpdir:
         template = Template(
