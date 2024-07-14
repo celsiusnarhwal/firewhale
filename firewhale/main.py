@@ -6,7 +6,8 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import typer
-from docker import DockerClient
+import docker
+import docker.errors
 from jinja2 import Template
 from loguru import logger
 from pydantic import Field, TypeAdapter, ValidationError
@@ -21,7 +22,7 @@ HERE = Path(__file__).parent
 
 app = typer.Typer(no_args_is_help=True)
 
-docker = DockerClient("unix:///var/run/docker.sock")
+dc = docker.DockerClient("unix://var/run/docker.sock")
 
 
 @app.command("generate")
@@ -50,16 +51,21 @@ def generate(json: bool = typer.Option(False, "--json")):
 
     matchers = []
 
-    firewhale_container_id = [
-        line.strip().split("/")[-6]
-        for line in open("/proc/self/mountinfo")
-        if "/var/lib/docker/containers" in line
-    ][0]
+    try:
+        firewhale = dc.containers.get(open("/etc/hostname").read())
+    except docker.errors.NotFound:
+        try:
+            firewhale = dc.containers.get(os.getenv("FIREWHALE_OVERRIDING_HOSTNAME"))
+        except docker.errors.NotFound:
+            raise docker.errors.NotFound(
+                "Firewhale was unable to identify its own container. If you overrode the hostname of Firewhale's"
+                "container, you must inform Firewhale of what the overriding hostname is via the "
+                "FIREWHALE_OVERRIDING_HOSTNAME environment variable."
+            ) from None
 
-    firewhale = docker.containers.get(firewhale_container_id)
     firewhale_networks = firewhale.attrs["NetworkSettings"]["Networks"]
 
-    for container in [ctr for ctr in docker.containers.list() if ctr is not firewhale]:
+    for container in [ctr for ctr in dc.containers.list() if ctr is not firewhale]:
         container_networks = container.attrs["NetworkSettings"]["Networks"]
         reachable_networks = set(firewhale_networks.keys()).intersection(
             container_networks.keys()
@@ -74,40 +80,47 @@ def generate(json: bool = typer.Option(False, "--json")):
 
         remote_ip_rule = "remote_ip " + " ".join(ip_addresses)
 
-        writeable = container.labels.get(f"{label_prefix}.write")
-        readable = container.labels.get(f"{label_prefix}.read")
-
-        # Write a request matcher for all methods
-        if writeable:
-            writeable_endpoints = [endpoint.lstrip("/") for endpoint in writeable.split(" ")]
-            rules = [remote_ip_rule]
-
-            if "all" not in writeable_endpoints:
-                rules.append("vars {endpoint} " + " ".join(writeable_endpoints))
-
-            matchers.append(
-                Matcher(name=f"firewhale_{container.name}_write", rules=rules)
-            )
-
-        # Write a request matcher for GET and HEAD only
-        if readable:
-            readable_endpoints = [endpoint.lstrip("/") for endpoint in readable.split(" ")]
-            rules = [remote_ip_rule, "method GET HEAD"]
-
-            if "all" not in readable_endpoints:
-                rules.append("vars {endpoint} " + " ".join(readable_endpoints))
-
-            matchers.append(
-                Matcher(name=f"firewhale_{container.name}_read", rules=rules)
-            )
+        read_label = container.labels.get(f"{label_prefix}.read")
+        write_label = container.labels.get(f"{label_prefix}.write")
 
         # Write a request matcher for read access to /events, /_ping, and /version
-        if readable or writeable:
-            matchers.append(Matcher(name=f"firewhale_{container.name}_basic", rules=[
-                remote_ip_rule,
-                "method GET HEAD",
-                "vars {endpoint} events _ping version"
-            ]))
+        if read_label or write_label:
+            matchers.append(
+                Matcher(
+                    name=f"{container.name}_basic",
+                    rules=[
+                        remote_ip_rule,
+                        "method GET HEAD",
+                        "vars {endpoint} events _ping version",
+                    ],
+                )
+            )
+
+            # Write a request matcher for GET and HEAD only
+            if read_label:
+                readable_endpoints = [
+                    endpoint.lstrip("/").casefold()
+                    for endpoint in read_label.split(" ")
+                ]
+                rules = [remote_ip_rule, "method GET HEAD"]
+
+                if "all" not in readable_endpoints:
+                    rules.append("vars {endpoint} " + " ".join(readable_endpoints))
+
+                matchers.append(Matcher(name=f"{container.name}_read", rules=rules))
+
+            # Write a request matcher for all methods
+            if write_label:
+                writeable_endpoints = [
+                    endpoint.lstrip("/").casefold()
+                    for endpoint in write_label.split(" ")
+                ]
+                rules = [remote_ip_rule]
+
+                if "all" not in writeable_endpoints:
+                    rules.append("vars {endpoint} " + " ".join(writeable_endpoints))
+
+                matchers.append(Matcher(name=f"{container.name}_write", rules=rules))
 
     with TemporaryDirectory() as tmpdir:
         template = Template(
