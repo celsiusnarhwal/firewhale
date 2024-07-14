@@ -34,7 +34,7 @@ jobs:
             tags+=ghcr.io/${{ github.repository_owner }}:${tag}
           done
           
-          printf %s, ${arr[@}} >> ${GITHUB_OUTPUT}
+          printf %s, ${arr[@]} >> ${GITHUB_OUTPUT}
 
       - name: Build and Push Image
         uses: docker/build-push-action@v4
