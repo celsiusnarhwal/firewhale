@@ -85,7 +85,8 @@ services:
     image: foo/bar
     container_name: foobar
     restart: unless-stopped
-    depends_on: firewhale
+    depends_on:
+      - firewhale
   environment:
     DOCKER_HOST: http://firewhale:2375
   labels:
