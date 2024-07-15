@@ -73,7 +73,7 @@ def generate(
                 )
             )
 
-            # Write a request matcher for GET and HEAD only
+            # Write a request matcher for other readable endpoints
             if read_label:
                 readable_endpoints = [
                     endpoint.lstrip("/").casefold()
@@ -86,7 +86,7 @@ def generate(
 
                 matchers.append(Matcher(name=f"{container.name}_read", rules=rules))
 
-            # Write a request matcher for all methods
+            # Write a request matcher writeable endpoints
             if write_label:
                 writeable_endpoints = [
                     endpoint.lstrip("/").casefold()
