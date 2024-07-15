@@ -86,7 +86,7 @@ def generate(
 
                 matchers.append(Matcher(name=f"{container.name}_read", rules=rules))
 
-            # Write a request matcher writeable endpoints
+            # Write a request matcher for writeable endpoints
             if write_label:
                 writeable_endpoints = [
                     endpoint.lstrip("/").casefold()
