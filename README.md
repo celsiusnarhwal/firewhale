@@ -155,10 +155,11 @@ You can see the Caddyfile Firewhale is currently using at any time:
 docker exec firewhale firewhale generate
 ```
 
-You can also view the configuration in Caddy's canonical JSON:
+You can access Caddy's [admin API](https://caddyserver.com/docs/api) by sending HTTP requests to `localhost:2019`
+within Firewhale's container.
 
 ```shell
-docker exec firewhale firewhale generate --json
+docker exec firewhale curl -s localhost:2019/config/
 ```
 
 The JSON output produced by this command is always minified. You can prettify it
