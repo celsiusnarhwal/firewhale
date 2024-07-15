@@ -2,6 +2,28 @@
 
 Firewhale is a proxy for the Docker socket.
 
+<details>
+<summary>Available Tags</summary>
+<br>
+
+| **Name**             | **Description**                                                                                        | **Example**                                                                            |
+| -------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `latest`             | The latest stable version of Firewhale.                                                                | `ghcr.io/celsiusnarhwal/firewhale:latest`                                              |
+| Major version number | The latest version of Firewhale with this major version number. May be optionally prefixed with a `v`. | `ghcr.io/celsiusnarhwal/firewhale:1`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1`         |
+| Exact version number | This version of Firewhale exactly. May be optionally prefixed with a `v`.                              | `ghcr.io/celsiusnarhwal/firewhale:1.0.0`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1.0.0` |
+| `head`               | The latest commit to Firewhale's `main` branch. Unstable.                                              | `ghcr.io/celsiusnarhwal/firewhale:head`                                                |
+
+</details>
+
+<details>
+<summary>Supported Architectures</summary>
+<br>
+
+- `amd64`
+- `arm64`
+
+</details>
+
 ## Why?
 
 Giving a service direct access to your Docker socket
@@ -157,12 +179,3 @@ API after stopping Firewhale and will not be able to complete its update routine
 depending on Firewhale and any other containers Watchtower stopped during the update routine will be left as such.
 
 See [Watchtower's documentation](https://containrrr.dev/watchtower/container-selection) for more info.
-
-## Available Tags
-
-| **Name**             | **Description**                                                                                        | **Example**                                                                            |
-| -------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| `latest`             | The latest stable version of Firewhale.                                                                | `ghcr.io/celsiusnarhwal/firewhale:latest`                                              |
-| Major version number | The latest version of Firewhale with this major version number. May be optionally prefixed with a `v`. | `ghcr.io/celsiusnarhwal/firewhale:1`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1`         |
-| Exact version number | This version of Firewhale exactly. May be optionally prefixed with a `v`.                              | `ghcr.io/celsiusnarhwal/firewhale:1.0.0`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1.0.0` |
-| `head`               | The latest commit to Firewhale's `main` branch. Unstable.                                              | `ghcr.io/celsiusnarhwal/firewhale:head`                                                |
