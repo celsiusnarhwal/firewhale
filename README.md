@@ -145,9 +145,6 @@ Some aspects of Firewhale can be configured via environment variables.
 | `FIREWHALE_REFRESH_INTERVAL` | The interval at which Firewhale will query Docker for any changes to your services' labels and update its rules accordingly. May be any [Go-style duration string](https://pkg.go.dev/time#ParseDuration), except you can also use `d` for day, `w` for week, `mm` for month, and `y` for year. | `30s`       |
 | `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                                                                                                    | `firewhale` |
 
-> [!IMPORTANT]
-> Firewhale cannot be configured to connect to Docker daemon sockets other than `unix:///var/run/docker.sock`.
-
 ## A note on Watchtower
 
 If you use [Watchtower](https://containrrr.dev/watchtower), it's important to make sure that either:
