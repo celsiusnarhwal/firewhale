@@ -46,7 +46,8 @@ see and do.
 
 ## How?
 
-Firewhale is built on top of [Caddy](https://caddyserver.comFirewhale is built on top of [Caddy](https://caddyserver.com) 
+Firewhale is built on top of [Caddy](https://caddyserver.comFirewhale is built on top
+of [Caddy](https://caddyserver.com)
 and dynamically generates a [Caddyfile](https://caddyserver.com/docs/caddyfile) using Docker service labels.
 
 ## Usage
@@ -160,14 +161,12 @@ docker exec firewhale firewhale generate
 
 ## Reloading Firewhale
 
-You can manually reload Firewhale's configuration with `firewhale reload`.
+If you don't want to wait for Firewhale to reload itself, you can manually reload Firewhale's configuration 
+with `firewhale reload`.
 
 ```shell
 docker exec firewhale firewhale reload
 ```
-
->[!TIP]
-> Automatic reloads are configurable via the [`FIREWHALE_RELOAD_INTERVAL` environment variable](#configuration).
 
 ## Using the Caddy API
 
@@ -181,12 +180,12 @@ docker exec firewhale curl -s localhost:2019
 
 Some aspects of Firewhale can be configured via environment variables.
 
-| **Environment Variable**     | **Description**                                                                                                                                                                                                                                                                                                                                              | **Default** |
-|------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| `FIREWHALE_PORT`             | The port Firewhale should listen on. Firewhale will be accessible at `http://firewhale:${FIREWHALE_PORT}`. Must be an integer between 0 and 65535.                                                                                                                                                                                                           | 2375        |
-| `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 699.                                                                                                                                       | 403         |
-| `FIREWHALE_RELOAD_INTERVAL`  | The interval at which Firewhale will query Docker for any changes to your services' labels and update its rules accordingly. Must be in the format of a [Go duration string](https://pkg.go.dev/time#ParseDuration), except you can also use `d` for day, `w` for week, `mm` for month, and `y` for year. Setting to `disable` disables automatic reloading. | `30s`       |
-| `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                                                                                                                                                                 | `firewhale` |
+| **Environment Variable**     | **Description**                                                                                                                                                                                                                                                                                           | **Default** |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `FIREWHALE_PORT`             | The port Firewhale should listen on. Firewhale will be accessible at `http://firewhale:${FIREWHALE_PORT}`. Must be an integer between 0 and 65535.                                                                                                                                                        | 2375        |
+| `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 699.                                                                                    | 403         |
+| `FIREWHALE_RELOAD_INTERVAL`  | The interval at which Firewhale will query Docker for any changes to your services' labels and update its rules accordingly. Must be in the format of a [Go duration string](https://pkg.go.dev/time#ParseDuration), except you can also use `d` for day, `w` for week, `mm` for month, and `y` for year. | `30s`       |
+| `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                                                                                                              | `firewhale` |
 
 ## A note on Watchtower
 
