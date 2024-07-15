@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import typing as t
+from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -9,7 +10,6 @@ import durationpy
 import typer
 from docker import DockerClient
 from jinja2 import Template
-from datetime import datetime
 from loguru import logger
 from pydantic import Field, TypeAdapter, ValidationError
 
@@ -23,11 +23,12 @@ HERE = Path(__file__).parent
 
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 
+
 @app.command("generate", help="Generate a Caddy configuration for Firewhale.")
 def generate(
-    json: bool = typer.Option(
-        False, "--json", help="Generate a JSON configuration instead of a Caddyfile."
-    )
+        json: bool = typer.Option(
+            False, "--json", help="Generate a JSON configuration instead of a Caddyfile."
+        )
 ):
     dc = DockerClient("unix://var/run/docker.sock")
 
