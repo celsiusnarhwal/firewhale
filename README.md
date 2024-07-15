@@ -161,9 +161,6 @@ You can also view the configuration in Caddy's canonical JSON via the [admin API
 docker exec firewhale curl -s localhost:2019/config/
 ```
 
-The JSON output produced by this command is always minified. You can prettify it
-by piping it to [jq](https://jqlang.github.io/jq/) or a similar program.
-
 ## Configuration
 
 Some aspects of Firewhale can be configured via environment variables.
