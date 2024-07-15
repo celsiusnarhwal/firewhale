@@ -26,6 +26,8 @@ Firewhale is a proxy for the Docker socket.
 
 </details>
 
+<hr>
+
 ## Why?
 
 Giving a service direct access to your Docker socket
