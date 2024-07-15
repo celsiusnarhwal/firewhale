@@ -117,6 +117,8 @@ services:
     image: ghcr.io/celsiusnarhwal/firewhale
     container_name: firewhale
     restart: unless-stopped
+    depends_on:
+      - firewhale
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
 
