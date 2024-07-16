@@ -68,11 +68,16 @@ def generate():
                 matchers.append(Matcher(name=f"{container.name}_write", rules=rules))
 
     # Write a request matcher for /events, /_ping, and /version
-    matchers.append(Matcher(name="events_ping_version", rules=[
-        "remote_host " + " ".join([ctr.name for ctr in allowed_containers]),
-        "method GET HEAD",
-        "vars {endpoint} events _ping version"
-    ]))
+    matchers.append(
+        Matcher(
+            name="events_ping_version",
+            rules=[
+                "remote_host " + " ".join([ctr.name for ctr in allowed_containers]),
+                "method GET HEAD",
+                "vars {endpoint} events _ping version",
+            ],
+        )
+    )
 
     template = jinja.get_template("Caddyfile.template.txt")
     caddyfile = template.render(matchers=matchers, settings=settings)
