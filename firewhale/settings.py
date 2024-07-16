@@ -1,7 +1,7 @@
 import typing as t
 
 import durationpy
-from pydantic import Field, field_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -16,6 +16,12 @@ class FirewhaleSettings(BaseSettings):
 
     dev_mode: bool = False
     dev_docker_opts: t.Optional[dict] = None
+
+    # noinspection PyMethodParameters
+    @model_validator(mode="after")
+    def validate_ports(self):
+        if self.port == self.caddy_api_port:
+            raise ValueError("FIREWHALE_PORT and FIREWHALE_CADDY_API_PORT cannot be the same.")
 
     # noinspection PyMethodParameters
     @field_validator("reload_interval")
