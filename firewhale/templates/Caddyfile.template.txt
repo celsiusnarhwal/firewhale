@@ -1,5 +1,5 @@
 {
-    admin localhost:{{ settings.caddy_api_port }}
+    persist_config off
 }
 
 :{{ settings.port }} {
