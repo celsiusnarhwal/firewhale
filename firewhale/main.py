@@ -134,7 +134,7 @@ def main():
 logger.remove()
 logger.add(
     level="INFO",
-    format="{time:YYYY/MM/DD HH:mm:ss.SSS} {level}  {message}",
+    format="{time:YYYY/MM/DD HH:mm:ss.SSS} {level}    firewhale   {message}",
     sink=sys.stderr,
 )
 
