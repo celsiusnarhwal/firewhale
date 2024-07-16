@@ -1,4 +1,8 @@
-:{{ port }} {
+{
+    admin localhost:{{ settings.caddy_api_port }}
+}
+
+:{{ settings.port }} {
     map {path} {endpoint} {
         ~^(?:\/v[0-9.]+)?\/([^\/?]+) "${1}"
     }
@@ -16,6 +20,6 @@
 
     {% endfor %}
     handle {
-        respond {{ status_code }}
+        respond {{ settings.http_status_code }}
     }
 }

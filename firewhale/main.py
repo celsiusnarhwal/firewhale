@@ -92,8 +92,7 @@ def generate():
 
     caddyfile = template.render(
         matchers=matchers,
-        port=settings.port,
-        status_code=settings.http_status_code,
+        settings=settings
     )
 
     print(caddyfile)
