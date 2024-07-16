@@ -46,8 +46,7 @@ see and do.
 
 ## How?
 
-Firewhale is built on top of [Caddy](https://caddyserver.comFirewhale) is built on top
-of [Caddy](https://caddyserver.com)
+Firewhale is built on top of [Caddy](https://caddyserver.com)
 and dynamically generates a [Caddyfile](https://caddyserver.com/docs/caddyfile) using Docker service labels.
 
 ## Usage
