@@ -9,7 +9,7 @@ Firewhale is a proxy for the Docker socket.
 <br>
 
 | **Name**             | **Description**                                                                                        | **Example**                                                                            |
-| -------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+|----------------------|--------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
 | `latest`             | The latest stable version of Firewhale.                                                                | `ghcr.io/celsiusnarhwal/firewhale:latest`                                              |
 | Major version number | The latest version of Firewhale with this major version number. May be optionally prefixed with a `v`. | `ghcr.io/celsiusnarhwal/firewhale:1`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1`         |
 | Exact version number | This version of Firewhale exactly. May be optionally prefixed with a `v`.                              | `ghcr.io/celsiusnarhwal/firewhale:1.0.0`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1.0.0` |
