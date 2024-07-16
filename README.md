@@ -191,7 +191,7 @@ Some aspects of Firewhale can be configured via environment variables.
   - `DOCKER_CERT_PATH`
   - `CADDY_ADMIN`
 
-## A note on Watchtower
+### A note on Watchtower
 
 If you use [Watchtower](https://containrrr.dev/watchtower), it's important to make sure that either:
 
