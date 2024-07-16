@@ -89,7 +89,6 @@ def generate():
                 matchers.append(Matcher(name=f"{container.name}_write", rules=rules))
 
     template = jinja.get_template("Caddyfile.template.txt")
-
     caddyfile = template.render(matchers=matchers, settings=settings)
 
     print(caddyfile)
