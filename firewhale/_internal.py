@@ -40,15 +40,13 @@ def generate():
         if read_label or write_label:
             allowed_containers.append(container)
 
-            remote_host_rule = f"remote_host {container.name}"
-
             # Write a request matcher for readable endpoints
             if read_label:
                 readable_endpoints = [
                     endpoint.lstrip("/").casefold()
                     for endpoint in read_label.split(" ")
                 ]
-                rules = [remote_host_rule, "method GET HEAD"]
+                rules = [f"remote_host {container.name}", "method GET HEAD"]
 
                 if "all" not in readable_endpoints:
                     rules.append("vars {endpoint} " + " ".join(readable_endpoints))
