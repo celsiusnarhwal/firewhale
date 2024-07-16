@@ -149,7 +149,7 @@ to `containers` and `images`.
 > whether or not you do so explicitly. The information returned by these endpoints is practically harmless, and most
 > services that hook into the Docker socket require these endpoints at a minimum.
 
-## Interacting With Firewhale
+## Interacting with Firewhale
 
 ## Viewing the Caddyfile
 
