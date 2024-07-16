@@ -19,4 +19,4 @@ RUN pip install pipx \
     && poetry config virtualenvs.create false \
     && poetry install --only main
 
-CMD ["./entrypoint.sh"]
+CMD ["firewhale", "start"]
