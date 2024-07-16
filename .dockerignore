@@ -3,5 +3,4 @@
 !poetry.lock
 !pyproject.toml
 !.poetry-version
-!entrypoint.sh
 !README.md
