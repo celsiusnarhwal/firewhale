@@ -45,6 +45,7 @@ def generate():
                     endpoint.lstrip("/").casefold()
                     for endpoint in read_label.split(" ")
                 ]
+
                 rules = [f"remote_host {container.name}", "method GET HEAD"]
 
                 if "all" not in readable_endpoints:
@@ -58,6 +59,7 @@ def generate():
                     endpoint.lstrip("/").casefold()
                     for endpoint in write_label.split(" ")
                 ]
+
                 rules = [f"remote_host {container.name}"]
 
                 if "all" not in writeable_endpoints:
