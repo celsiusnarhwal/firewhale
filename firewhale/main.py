@@ -107,23 +107,21 @@ def _start():
         f"Reloading configuration every {settings.reload_interval_seconds} seconds"
     )
 
-    subprocess.run(["caddy", "start"])
-
-    first_reload_done = False
+    subprocess.run(
+        ["caddy", "start"],
+        env={**os.environ, "CADDY_ADMIN": settings.caddy_admin_address}
+    )
 
     while True:
-        api_port = settings.caddy_api_port if first_reload_done else 2019
-
         with redirect_stdout(open(os.devnull, "w")):
             httpx.post(
-                f"http://localhost:{api_port}/load",
+                f"http://{settings.caddy_admin_address}/load",
                 headers={"Content-Type": "text/caddyfile"},
                 content=generate(),
             )
 
-        first_reload_done = True
-
         time.sleep(settings.reload_interval_seconds)
+        logger.info("Reloading configuration")
 
 
 @app.callback(

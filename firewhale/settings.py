@@ -17,13 +17,14 @@ class FirewhaleSettings(BaseSettings):
     dev_mode: bool = False
     dev_docker_opts: t.Optional[dict] = None
 
-    # noinspection PyMethodParameters
     @model_validator(mode="after")
     def validate_ports(self):
         if self.port == self.caddy_api_port:
-            raise ValueError("FIREWHALE_PORT and FIREWHALE_CADDY_API_PORT cannot be the same.")
+            raise ValueError(
+                "FIREWHALE_PORT and FIREWHALE_CADDY_API_PORT cannot be the same."
+            )
 
-    # noinspection PyMethodParameters
+    @classmethod
     @field_validator("reload_interval")
     def validate_reload_interval(cls, v):
         try:
@@ -35,6 +36,10 @@ class FirewhaleSettings(BaseSettings):
             ) from None
 
         return v
+
+    @property
+    def caddy_admin_address(self):
+        return f"localhost:{self.caddy_api_port}"
 
     @property
     def reload_interval_seconds(self):
