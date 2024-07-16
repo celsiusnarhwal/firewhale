@@ -38,7 +38,7 @@ def generate():
         name: str
         rules: list
 
-    if settings.dev_mode:
+    if settings.dev_mode and settings.dev_docker_opts:
         dc = DockerClient(**settings.dev_docker_opts)
     else:
         dc = DockerClient("unix:///var/run/docker.sock")
