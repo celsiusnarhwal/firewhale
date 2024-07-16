@@ -183,7 +183,7 @@ Some aspects of Firewhale can be configured via environment variables.
 
 - Firewhale only works on [user-defined bridge networks](https://docs.docker.com/network/drivers/bridge/#differences-between-user-defined-bridges-and-the-default-bridge).
   This shouldn't be an issue if you're using Docker Compose, where such networks are the default for services that aren't explicitly defined to use something else.
-  But just to be clear, you can't use Docker's predefined bridge network or the host or Macvlan networking drivers with Firewhale. It's not going to work.
+  But just to be clear, you can't use Docker's predefined bridge network or the host or Macvlan networking drivers with Firewhale.
 - Firewhale can only communicate over plain HTTP. TLS connections aren't supported and aren't planned to be.
 - Firewhale does _not_ honor the following environment variables and setting them will have no effect:
   - `DOCKER_HOST`
