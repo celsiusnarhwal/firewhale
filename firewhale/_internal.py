@@ -36,7 +36,6 @@ def generate():
         read_label = container.labels.get(f"{settings.label_prefix}.read")
         write_label = container.labels.get(f"{settings.label_prefix}.write")
 
-        # Write a request matcher for read access to /events, /_ping, and /version
         if read_label or write_label:
             allowed_containers.append(container)
 
