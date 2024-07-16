@@ -159,15 +159,6 @@ You can see the Caddyfile Firewhale is currently using with `firewhale generate`
 docker exec firewhale firewhale generate
 ```
 
-## Reloading Firewhale
-
-If you don't want to wait for Firewhale to reload itself, you can manually reload Firewhale's configuration 
-with `firewhale reload`.
-
-```shell
-docker exec firewhale firewhale reload
-```
-
 ## Using the Caddy API
 
 You can access Caddy's [admin API](https://caddyserver.com/docs/api) by sending an HTTP request to `localhost:2019`.
@@ -175,6 +166,9 @@ You can access Caddy's [admin API](https://caddyserver.com/docs/api) by sending 
 ```shell
 docker exec firewhale curl -s localhost:2019
 ```
+
+> [!WARNING]
+> Any configuration changes made via the admin API will be lost when Firewhale's container is restarted or recreated.
 
 ## Configuration
 
