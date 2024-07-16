@@ -161,7 +161,7 @@ docker exec firewhale firewhale generate
 
 ### Using the Caddy API
 
-You can access Caddy's [admin API](https://caddyserver.com/docs/api) by sending an HTTP request to `localhost:2019`.
+You can access Caddy's [admin API](https://caddyserver.com/docs/api) by sending HTTP requests to `localhost:2019`.
 
 ```shell
 docker exec firewhale curl -s localhost:2019
