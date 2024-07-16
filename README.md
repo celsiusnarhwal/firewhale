@@ -46,7 +46,7 @@ see and do.
 
 ## How?
 
-Firewhale is built on top of [Caddy](https://caddyserver.comFirewhale is built on top
+Firewhale is built on top of [Caddy](https://caddyserver.comFirewhale) is built on top
 of [Caddy](https://caddyserver.com)
 and dynamically generates a [Caddyfile](https://caddyserver.com/docs/caddyfile) using Docker service labels.
 
@@ -64,7 +64,7 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
 ```
 
-Firewhale will be accessible from services with which it shares a network at `http://firewhale:2375`.
+By default, Firewhale will be accessible from services with which it shares a network at `http://firewhale:2375`.
 
 A service's access to the Docker socket can be controlled with labels. The `firewhale.read` label controls
 which Docker API endpoints a service can read from (i.e., send `GET` and `HEAD` requests to) and the `firewhale.write`
@@ -158,7 +158,8 @@ docker exec firewhale firewhale view
 
 ### Using the Caddy API
 
-You can access Caddy's [admin API](https://caddyserver.com/docs/api) by sending HTTP requests to `localhost:2019`.
+By default, Caddy's [admin API](https://caddyserver.com/docs/api) is available inside the the container at
+`localhost:2019`.
 
 ```shell
 docker exec firewhale curl -s localhost:2019
