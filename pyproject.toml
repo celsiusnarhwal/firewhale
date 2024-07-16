@@ -17,7 +17,7 @@ loguru = "^0.7.2"
 pydantic-settings = "^2.3.4"
 
 [tool.poetry.scripts]
-firewhale = "firewhale.main:app"
+firewhale = "firewhale.cli:app"
 
 [tool.poetry.group.dev.dependencies]
 paramiko = "^3.4.0"
