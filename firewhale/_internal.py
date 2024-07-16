@@ -29,6 +29,7 @@ def generate():
     else:
         dc = DockerClient("unix:///var/run/docker.sock")
 
+    allowed_containers = []
     matchers = []
 
     for container in dc.containers.list():
@@ -37,20 +38,11 @@ def generate():
 
         # Write a request matcher for read access to /events, /_ping, and /version
         if read_label or write_label:
+            allowed_containers.append(container)
+
             remote_host_rule = f"remote_host {container.name}"
 
-            matchers.append(
-                Matcher(
-                    name=f"{container.name}_basic",
-                    rules=[
-                        remote_host_rule,
-                        "method GET HEAD",
-                        "vars {endpoint} events _ping version",
-                    ],
-                )
-            )
-
-            # Write a request matcher for other readable endpoints
+            # Write a request matcher for readable endpoints
             if read_label:
                 readable_endpoints = [
                     endpoint.lstrip("/").casefold()
@@ -75,6 +67,13 @@ def generate():
                     rules.append("vars {endpoint} " + " ".join(writeable_endpoints))
 
                 matchers.append(Matcher(name=f"{container.name}_write", rules=rules))
+
+    # Write a request matcher for /events, /_ping, and /version
+    matchers.append(Matcher(name="events_ping_version", rules=[
+        "remote_host " + " ".join([ctr.name for ctr in allowed_containers]),
+        "method GET HEAD",
+        "vars {endpoint} events _ping version"
+    ]))
 
     template = jinja.get_template("Caddyfile.template.txt")
     caddyfile = template.render(matchers=matchers, settings=settings)
