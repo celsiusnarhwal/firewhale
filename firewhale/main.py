@@ -51,11 +51,13 @@ def generate():
 
         # Write a request matcher for read access to /events, /_ping, and /version
         if read_label or write_label:
+            remote_host_rule = f"remote_host {container.name}"
+
             matchers.append(
                 Matcher(
                     name=f"{container.name}_basic",
                     rules=[
-                        f"remote_host {container.name}",
+                        remote_host_rule,
                         "method GET HEAD",
                         "vars {endpoint} events _ping version",
                     ],
@@ -68,7 +70,7 @@ def generate():
                     endpoint.lstrip("/").casefold()
                     for endpoint in read_label.split(" ")
                 ]
-                rules = [f"remote_host {container.name}", "method GET HEAD"]
+                rules = [remote_host_rule, "method GET HEAD"]
 
                 if "all" not in readable_endpoints:
                     rules.append("vars {endpoint} " + " ".join(readable_endpoints))
@@ -109,7 +111,7 @@ def _start():
 
     subprocess.run(
         ["caddy", "start"],
-        env={**os.environ, "CADDY_ADMIN": settings.caddy_admin_address}
+        env={**os.environ, "CADDY_ADMIN": settings.caddy_admin_address},
     )
 
     while True:
