@@ -57,15 +57,6 @@ def _start():
         logger.info("Reloading configuration")
 
 
-# @app.callback(
-#     epilog=f"© {datetime.now().astimezone().year} celsius narhwal. Thank you kindly for your attention."
-# )
-# def main():
-#     """
-#     Firewhale is a proxy for the Docker socket.
-#     """
-
-
 logger.remove()
 logger.add(
     level="INFO",
