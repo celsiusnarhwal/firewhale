@@ -90,10 +90,7 @@ def generate():
 
     template = jinja.get_template("Caddyfile.template.txt")
 
-    caddyfile = template.render(
-        matchers=matchers,
-        settings=settings
-    )
+    caddyfile = template.render(matchers=matchers, settings=settings)
 
     print(caddyfile)
 
@@ -105,18 +102,27 @@ def _start():
     """
     Start Firewhale.
     """
+
     logger.info(f"Listening on port {settings.port}")
-    logger.info(f"Reloading configuration every {settings.reload_interval_seconds} seconds")
+    logger.info(
+        f"Reloading configuration every {settings.reload_interval_seconds} seconds"
+    )
 
     subprocess.run(["caddy", "start"])
 
+    first_reload_done = False
+
     while True:
+        api_port = settings.caddy_api_port if first_reload_done else 2019
+
         with redirect_stdout(open(os.devnull, "w")):
             httpx.post(
-                "http://localhost:2019/load",
+                f"http://localhost:{api_port}/load",
                 headers={"Content-Type": "text/caddyfile"},
                 content=generate(),
             )
+
+        first_reload_done = True
 
         time.sleep(settings.reload_interval_seconds)
 
