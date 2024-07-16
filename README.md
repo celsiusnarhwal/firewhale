@@ -150,10 +150,10 @@ to `containers` and `images`.
 
 ### Viewing the Caddyfile
 
-You can see the Caddyfile Firewhale is currently using with `firewhale generate`.
+You can view the Caddyfile Firewhale is currently using with `firewhale view`.
 
 ```shell
-docker exec firewhale firewhale generate
+docker exec firewhale firewhale view
 ```
 
 ### Using the Caddy API
