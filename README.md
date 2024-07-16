@@ -66,9 +66,6 @@ services:
 
 Firewhale will be accessible from services with which it shares a network at `http://firewhale:2375`.
 
-> [!IMPORTANT]
-> Firewhale only works with services it shares a network with.
-
 A service's access to the Docker socket can be controlled with labels. The `firewhale.read` label controls
 which Docker API endpoints a service can read from (i.e., send `GET` and `HEAD` requests to) and the `firewhale.write`
 label controls which endpoints a service can write to
@@ -181,6 +178,18 @@ Some aspects of Firewhale can be configured via environment variables.
 | `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 699.                                                                                    | 403         |
 | `FIREWHALE_RELOAD_INTERVAL`  | The interval at which Firewhale will query Docker for any changes to your services' labels and update its rules accordingly. Must be in the format of a [Go duration string](https://pkg.go.dev/time#ParseDuration), except you can also use `d` for day, `w` for week, `mm` for month, and `y` for year. | `30s`       |
 | `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                                                                                                              | `firewhale` |
+
+## Considerations
+
+- Firewhale only works on [user-defined bridge networks](https://docs.docker.com/network/drivers/bridge/#differences-between-user-defined-bridges-and-the-default-bridge).
+  This shouldn't be an issue if you're using Docker Compose, where such networks are the default for services that aren't explicitly defined to use something else.
+  But just to be clear, you can't use Docker's predefined bridge network or the host or Macvlan networking drivers with Firewhale. It's not going to work.
+- Firewhale can only communicate over plain HTTP. TLS connections aren't supported and aren't planned to be.
+- Firewhale does _not_ honor the following environment variables and setting them will have no effect:
+  - `DOCKER_HOST`
+  - `DOCKER_TLS_VERIFY`
+  - `DOCKER_CERT_PATH`
+  - `CADDY_ADMIN`
 
 ## A note on Watchtower
 
