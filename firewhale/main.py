@@ -137,7 +137,6 @@ logger.add(
     format="{time:YYYY/MM/DD HH:mm:ss.SSS} {level}  {message}",
     sink=sys.stderr,
 )
-logger.level("INFO", color="blue")
 
 if __name__ == "__main__":
     app()
