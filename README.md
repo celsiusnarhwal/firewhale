@@ -157,7 +157,7 @@ docker exec firewhale firewhale view
 
 ### Using the Caddy API
 
-By default, Caddy's [admin API](https://caddyserver.com/docs/api) is available inside the the container at
+By default, Caddy's [admin API](https://caddyserver.com/docs/api) is available inside Firewhale's container at
 `localhost:2019`.
 
 ```shell
