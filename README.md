@@ -151,7 +151,7 @@ to `containers` and `images`.
 
 ## Interacting with Firewhale
 
-## Viewing the Caddyfile
+### Viewing the Caddyfile
 
 You can see the Caddyfile Firewhale is currently using with `firewhale generate`.
 
@@ -159,7 +159,7 @@ You can see the Caddyfile Firewhale is currently using with `firewhale generate`
 docker exec firewhale firewhale generate
 ```
 
-## Using the Caddy API
+### Using the Caddy API
 
 You can access Caddy's [admin API](https://caddyserver.com/docs/api) by sending an HTTP request to `localhost:2019`.
 
