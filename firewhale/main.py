@@ -116,6 +116,8 @@ def _start():
         api_port = settings.caddy_api_port if first_reload_done else 2019
 
         with redirect_stdout(open(os.devnull, "w")):
+            api_port = settings.caddy_api_port if first_reload_done else 2019
+
             httpx.post(
                 f"http://localhost:{api_port}/load",
                 headers={"Content-Type": "text/caddyfile"},
