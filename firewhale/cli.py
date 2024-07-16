@@ -14,11 +14,15 @@ from firewhale.settings import FirewhaleSettings
 settings = FirewhaleSettings()
 
 app = typer.Typer(
-    no_args_is_help=True, add_completion=False, pretty_exceptions_show_locals=True
+    no_args_is_help=True,
+    add_completion=False,
+    pretty_exceptions_show_locals=True,
+    help="Firewhale is a proxy for the Docker socket.",
+    epilog=f"© {datetime.now().astimezone().year} celsius narhwal. Thank you kindly for your attention.",
 )
 
 
-@app.command()
+@app.command("view")
 def view():
     """
     View Firewhale's current Caddyfile.
@@ -53,13 +57,13 @@ def _start():
         logger.info("Reloading configuration")
 
 
-@app.callback(
-    epilog=f"© {datetime.now().astimezone().year} celsius narhwal. Thank you kindly for your attention."
-)
-def main():
-    """
-    Firewhale is a proxy for the Docker socket.
-    """
+# @app.callback(
+#     epilog=f"© {datetime.now().astimezone().year} celsius narhwal. Thank you kindly for your attention."
+# )
+# def main():
+#     """
+#     Firewhale is a proxy for the Docker socket.
+#     """
 
 
 logger.remove()
