@@ -36,7 +36,9 @@ class FirewhaleSettings(BaseSettings):
             ) from None
 
         if interval.total_seconds() < 0:
-            raise ValueError(f"FIREWHALE_RELOAD_INTERVAL may not be negative ({v} = {interval.total_seconds()}).")
+            raise ValueError(
+                f"FIREWHALE_RELOAD_INTERVAL may not be negative ({v} = {interval.total_seconds()})."
+            )
 
         return v
 
