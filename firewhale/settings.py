@@ -10,7 +10,7 @@ class FirewhaleSettings(BaseSettings):
 
     port: int = Field(2375, ge=0, le=65535)
     caddy_api_port: int = Field(2019, ge=0, le=65535)
-    http_status_code: int = Field(403, ge=100, le=699)
+    http_status_code: int = Field(403, ge=100, le=599)
     reload_interval: str = "30s"
     label_prefix: str = "firewhale"
 
