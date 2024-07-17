@@ -9,7 +9,7 @@ python = "^3.12"
 jinja2 = "^3.1.4"
 docker = "^7.1.0"
 pydantic = "^2.8.2"
-typer = {extras = ["all"], version = "^0.12.3"}
+typer = { extras = ["all"], version = "^0.12.3" }
 durationpy = "^0.7"
 httpx = "^0.27.0"
 loguru = "^0.7.2"
@@ -20,10 +20,6 @@ firewhale = "firewhale.cli:app"
 
 [tool.poetry.group.dev.dependencies]
 paramiko = "^3.4.0"
-
-
-[tool.poetry.group.ci.dependencies]
-semver = "^3.0.2"
 
 [build-system]
 requires = ["poetry-core"]
