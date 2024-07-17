@@ -23,5 +23,3 @@ COPY . /app/
 RUN poetry install --only-root
 
 CMD ["firewhale", "start"]
-
-LABEL org.opencontainers.image.source=https://github.com/celsiusnarhwal/firewhale
