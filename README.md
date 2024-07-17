@@ -128,11 +128,11 @@ services:
     image: foo/bar
     container_name: foobar
     restart: unless-stopped
-  environment:
-    DOCKER_HOST: http://firewhale:2375
-  labels:
-    firewhale.read: all
-    firewhale.write: containers images
+    environment:
+      DOCKER_HOST: http://firewhale:2375
+    labels:
+      firewhale.read: all
+      firewhale.write: containers images
 ```
 
 In this example, `foobar` has read access to all endpoints and write access
