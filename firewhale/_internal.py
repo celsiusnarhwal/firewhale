@@ -1,3 +1,5 @@
+import json
+import sys
 import typing as t
 from pathlib import Path
 
@@ -84,3 +86,16 @@ def generate():
     caddyfile = template.render(matchers=matchers, settings=settings)
 
     return caddyfile
+
+
+def log_sink(log: str):
+    record = json.loads(log)["record"]
+
+    log = {
+        "level": record["level"]["name"].lower(),
+        "ts": record["time"]["timestamp"],
+        "logger": "firewhale",
+        "msg": record["message"],
+    }
+
+    print(json.dumps(log), file=sys.stderr)

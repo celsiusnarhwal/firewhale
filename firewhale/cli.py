@@ -1,6 +1,5 @@
 import os
 import subprocess
-import sys
 import time
 from datetime import datetime
 
@@ -8,7 +7,7 @@ import httpx
 import typer
 from loguru import logger
 
-from firewhale._internal import generate
+from firewhale import _internal
 from firewhale.settings import FirewhaleSettings
 
 settings = FirewhaleSettings()
@@ -27,7 +26,7 @@ def view():
     """
     View Firewhale's current Caddyfile.
     """
-    print(generate())
+    print(_internal.generate())
 
 
 @app.command("start", hidden=True, add_help_option=False)
@@ -35,7 +34,6 @@ def _start():
     """
     Start Firewhale.
     """
-
     logger.info(f"Listening on port {settings.port}")
     logger.info(
         f"Reloading configuration every {settings.reload_interval_seconds} seconds"
@@ -50,7 +48,7 @@ def _start():
         httpx.post(
             f"http://{settings.caddy_admin_address}/load",
             headers={"Content-Type": "text/caddyfile"},
-            content=generate(),
+            content=_internal.generate(),
         )
 
         time.sleep(settings.reload_interval_seconds)
@@ -60,8 +58,8 @@ def _start():
 logger.remove()
 logger.add(
     level="INFO",
-    format="{time:YYYY/MM/DD HH:mm:ss.SSS} {level}    firewhale   {message}",
-    sink=sys.stderr,
+    sink=_internal.log_sink,
+    serialize=True,
 )
 
 if __name__ == "__main__":
