@@ -89,11 +89,11 @@ services:
     restart: unless-stopped
     depends_on:
       - firewhale
-  environment:
-    DOCKER_HOST: http://firewhale:2375
-  labels:
-    firewhale.read: containers images networks volumes
-    firewhale.write: containers images
+    environment:
+      DOCKER_HOST: http://firewhale:2375
+    labels:
+      firewhale.read: containers images networks volumes
+      firewhale.write: containers images
 ```
 
 In this example, `foobar` has read access to the `containers`, `images`, `networks`, and `volumes` endpoints
