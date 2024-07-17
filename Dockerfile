@@ -20,7 +20,7 @@ COPY pyproject.toml poetry.lock /app/
 RUN poetry install --no-root --only main
 
 COPY . /app/
-RUN poetry install --only main
+RUN poetry install --only-root
 
 CMD ["firewhale", "start"]
 
