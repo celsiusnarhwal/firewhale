@@ -28,12 +28,15 @@ class FirewhaleSettings(BaseSettings):
     @field_validator("reload_interval")
     def validate_reload_interval(cls, v):
         try:
-            durationpy.from_str(v)
+            interval = durationpy.from_str(v)
         except ValueError:
             raise ValueError(
                 "FIREWHALE_RELOAD_INTERVAL must be in the format of a Go duration string. "
                 "https://pkg.go.dev/time#ParseDuration"
             ) from None
+
+        if interval.total_seconds() < 0:
+            raise ValueError(f"FIREWHALE_RELOAD_INTERVAL may not be negative ({v} = {interval.total_seconds()}).")
 
         return v
 
