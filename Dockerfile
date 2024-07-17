@@ -9,12 +9,12 @@ ENV PATH=${PATH}:${PIPX_BIN_DIR}
 
 COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 
-WORKDIR /app/
-
 RUN curl -fsSL https://github.com/pypa/pipx/releases/latest/download/pipx.pyz -o pipx.pyz
 
-COPY .poetry-version /app/
-RUN python pipx.pyz install poetry==$(cat .poetry-version) && poetry config virtualenvs.create false
+RUN --mount=type=bind,source=.poetry-version,target=.poetry-version \
+    python pipx.pyz install poetry==$(cat .poetry-version) && poetry config virtualenvs.create false
+
+WORKDIR /app/
 
 COPY pyproject.toml poetry.lock /app/
 RUN poetry install --no-root --only main
