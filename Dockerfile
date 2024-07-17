@@ -9,7 +9,7 @@ ENV PATH=${PATH}:${PIPX_BIN_DIR}
 
 COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 
-WORKDIR /app
+WORKDIR /app/
 
 RUN curl -fsSL https://github.com/pypa/pipx/releases/latest/download/pipx.pyz -o pipx.pyz
 
