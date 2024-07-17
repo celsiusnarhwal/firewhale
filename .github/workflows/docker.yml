@@ -13,8 +13,8 @@ permissions:
 
 jobs:
   build-and-push:
+    name: Publish Image
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
