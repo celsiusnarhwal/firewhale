@@ -1,4 +1,8 @@
 on:
+  push:
+    paths-ignore:
+      - README.md
+
   release:
     types:
       - published
@@ -37,7 +41,6 @@ jobs:
             type=pep440,pattern=v{{version}}
             type=pep440,pattern={{major}}
             type=pep440,pattern=v{{major}}
-            
 
       - name: Build and Push Image
         uses: docker/build-push-action@v6
