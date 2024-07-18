@@ -9,7 +9,7 @@ Firewhale is a proxy for the Docker socket.
 <br>
 
 | **Name**             | **Description**                                                                                        | **Example**                                                                            |
-|----------------------|--------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| -------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
 | `latest`             | The latest stable version of Firewhale.                                                                | `ghcr.io/celsiusnarhwal/firewhale:latest`                                              |
 | Major version number | The latest version of Firewhale with this major version number. May be optionally prefixed with a `v`. | `ghcr.io/celsiusnarhwal/firewhale:1`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1`         |
 | Exact version number | This version of Firewhale exactly. May be optionally prefixed with a `v`.                              | `ghcr.io/celsiusnarhwal/firewhale:1.0.0`<br/>`ghcr.io/celsiusnarhwal/firewhale:v1.0.0` |
@@ -184,12 +184,16 @@ Some aspects of Firewhale can be configured via environment variables.
 | `FIREWHALE_HTTP_STATUS_CODE` | The [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) Firewhale should respond with when it receives a request it has not been configured to allow. Must be an integer between 100 and 599.                                                                                        | 403         |
 | `FIREWHALE_RELOAD_INTERVAL`  | The interval at which Firewhale will query Docker for any changes to your services' labels and update its rules accordingly. Must be in the format of a [Go duration string](https://pkg.go.dev/time#ParseDuration), except you can also use `d` for day, `w` for week, `mm` for month, and `y` for year.[^1] | `30s`       |
 | `FIREWHALE_LABEL_PREFIX`     | The prefix with which Firewhale labels should begin. Socket access will be configurable using the `${LABEL_PREFIX}.read` and `${LABEL_PREFIX}.write` labels.                                                                                                                                                  | `firewhale` |
+| `FIREWHALE_LOG_LEVEL`        | The minimum severity level for which Firewhale (and Caddy) should output logs. Must be one of `DEBUG`, `INFO`, `WARN`, or `ERROR`. (case-sensitive).                                                                                                                                                          | `INFO`      |
 
 ## Considerations
 
-- Firewhale only works on [user-defined bridge networks](https://docs.docker.com/network/drivers/bridge/#differences-between-user-defined-bridges-and-the-default-bridge).
-  This shouldn't be an issue if you're using Docker Compose, where such networks are the default for services that aren't explicitly defined to use something else.
-  But just to be clear, you can't use Docker's predefined bridge network or the host or Macvlan networking drivers with Firewhale.
+- Firewhale only works
+  on [user-defined bridge networks](https://docs.docker.com/network/drivers/bridge/#differences-between-user-defined-bridges-and-the-default-bridge).
+  This shouldn't be an issue if you're using Docker Compose, where such networks are the default for services that
+  aren't explicitly defined to use something else.
+  But just to be clear, you can't use Docker's predefined bridge network or the host or Macvlan networking drivers with
+  Firewhale.
 - You don't need to, and in fact shouldn't, publish any ports on Firewhale's container.
 - Firewhale can only communicate over plain HTTP. TLS connections aren't supported and aren't planned to be.
 - Firewhale does _not_ honor the following environment variables and setting them will have no effect:

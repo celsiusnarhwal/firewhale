@@ -39,28 +39,40 @@ def _start():
         f"Reloading configuration every {settings.reload_interval_seconds} seconds"
     )
 
+    logger.debug("Starting Caddy")
+
     subprocess.run(
         ["caddy", "start"],
         env={**os.environ, "CADDY_ADMIN": settings.caddy_admin_address},
     )
 
     while True:
-        httpx.post(
-            f"http://{settings.caddy_admin_address}/load",
-            headers={"Content-Type": "text/caddyfile"},
-            content=_internal.generate(),
-        )
+        logger.debug(f"Updating Caddy configuration via admin API at {settings.caddy_admin_address}")
+
+        try:
+            httpx.post(
+                f"http://{settings.caddy_admin_address}/load",
+                headers={"Content-Type": "text/caddyfile"},
+                content=_internal.generate(),
+            ).raise_for_status()
+        except httpx.ConnectError:
+            logger.error(
+                f"Failed to reach Caddy's admin API at {settings.caddy_admin_address}. Please restart Firewhale.")
+            exit(1)
 
         time.sleep(settings.reload_interval_seconds)
         logger.info("Reloading configuration")
 
 
-logger.remove()
-logger.add(
-    level="INFO",
-    sink=_internal.log_sink,
-    serialize=True,
-)
+@app.callback()
+def main():
+    logger.remove()
+    logger.add(
+        level=settings.log_level,
+        sink=_internal.log_sink,
+        serialize=True,
+    )
+
 
 if __name__ == "__main__":
     app()

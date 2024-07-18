@@ -7,6 +7,7 @@ from docker import DockerClient
 from jinja2 import Environment, FileSystemLoader
 
 from firewhale.settings import FirewhaleSettings
+from loguru import logger
 
 settings = FirewhaleSettings()
 
@@ -31,10 +32,14 @@ def generate():
     else:
         dc = DockerClient("unix:///var/run/docker.sock")
 
+    logger.debug(f"Connected to Docker Engine via {dc.api.base_url}")
+
     allowed_containers = []
     matchers = []
 
     for container in dc.containers.list():
+        logger.debug(f'Determining access for container "{container.name}"')
+
         read_label = container.labels.get(f"{settings.label_prefix}.read")
         write_label = container.labels.get(f"{settings.label_prefix}.write")
 
@@ -51,7 +56,13 @@ def generate():
                 rules = [f"remote_host {container.name}", "method GET HEAD"]
 
                 if "all" not in readable_endpoints:
+                    logger.debug(
+                        f'Granting container "{container.name}" read access to: '
+                        + ", ".join([f"/{endpoint}" for endpoint in readable_endpoints])
+                    )
                     rules.append("vars {endpoint} " + " ".join(readable_endpoints))
+                else:
+                    logger.debug(f'Granting container "{container.name}" read access to all endpoints')
 
                 matchers.append(Matcher(name=f"{container.name}_read", rules=rules))
 
@@ -65,23 +76,36 @@ def generate():
                 rules = [f"remote_host {container.name}"]
 
                 if "all" not in writeable_endpoints:
+                    logger.debug(
+                        f'Granting container "{container.name}" read access to: '
+                        + ", ".join([f"/{endpoint}" for endpoint in writeable_endpoints])
+                    )
+
                     rules.append("vars {endpoint} " + " ".join(writeable_endpoints))
+                else:
+                    logger.debug(f'Granting container "{container.name}" write access to all endpoints')
 
                 matchers.append(Matcher(name=f"{container.name}_write", rules=rules))
+        else:
+            logger.debug(f"No access granted to container {container.name}")
 
     # Write a request matcher for /events, /_ping, and /version
     if allowed_containers:
+        container_names = [ctr.name for ctr in allowed_containers]
+        logger.debug(f"Granting read access to /events, /_ping, and /version to: {", ".join(container_names)}")
+
         matchers.append(
             Matcher(
                 name="events_ping_version",
                 rules=[
-                    "remote_host " + " ".join([ctr.name for ctr in allowed_containers]),
+                    f"remote_host {" ".join([ctr.name for ctr in allowed_containers])}",
                     "method GET HEAD",
                     "vars {endpoint} events _ping version",
                 ],
             )
         )
 
+    logger.debug("Generating Caddyfile")
     template = jinja.get_template("Caddyfile.template.txt")
     caddyfile = template.render(matchers=matchers, settings=settings)
 

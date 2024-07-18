@@ -1,7 +1,7 @@
 import typing as t
 
 import durationpy
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -13,6 +13,7 @@ class FirewhaleSettings(BaseSettings):
     http_status_code: int = Field(403, ge=100, le=599)
     reload_interval: str = "30s"
     label_prefix: str = "firewhale"
+    log_level: t.Literal["INFO", "WARN", "ERROR", "DEBUG"] = "INFO"
 
     dev_mode: bool = False
     dev_docker_opts: t.Optional[dict] = None
@@ -24,23 +25,25 @@ class FirewhaleSettings(BaseSettings):
                 "FIREWHALE_PORT and FIREWHALE_CADDY_API_PORT cannot be the same."
             )
 
-    @classmethod
-    @field_validator("reload_interval")
-    def validate_reload_interval(cls, v):
+        return self
+
+    @model_validator(mode="after")
+    def validate_reload_interval(self):
         try:
-            interval = durationpy.from_str(v)
+            _ = self.reload_interval_seconds
         except ValueError:
             raise ValueError(
                 "FIREWHALE_RELOAD_INTERVAL must be in the format of a Go duration string. "
                 "https://pkg.go.dev/time#ParseDuration"
             ) from None
 
-        if interval.total_seconds() < 0:
+        if self.reload_interval_seconds < 0:
             raise ValueError(
-                f"FIREWHALE_RELOAD_INTERVAL may not be negative ({v} = {interval.total_seconds()})."
+                f"FIREWHALE_RELOAD_INTERVAL may not be negative "
+                f"({self.reload_interval} = {self.reload_interval_seconds})."
             )
 
-        return v
+        return self
 
     @property
     def caddy_admin_address(self):

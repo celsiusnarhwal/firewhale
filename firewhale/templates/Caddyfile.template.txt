@@ -1,5 +1,9 @@
 {
     persist_config off
+
+    log {
+        level {{ settings.log_level }}
+    }
 }
 
 :{{ settings.port }} {
