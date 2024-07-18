@@ -11,10 +11,10 @@ COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 
 WORKDIR /app/
 
-RUN curl -fsSL https://github.com/pypa/pipx/releases/latest/download/pipx.pyz -o pipx.pyz
+RUN curl -fsSL https://github.com/pypa/pipx/releases/latest/download/pipx.pyz | install /dev/stdin /usr/local/bin/pipx
 
 COPY .poetry-version /app/
-RUN python pipx.pyz install poetry==$(cat .poetry-version) && poetry config virtualenvs.create false
+RUN pipx install poetry==$(cat .poetry-version) && poetry config virtualenvs.create false
 
 COPY pyproject.toml poetry.lock /app/
 RUN poetry install --no-root --only main
