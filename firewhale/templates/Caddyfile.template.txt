@@ -3,6 +3,7 @@
 
     log {
         level {{ settings.log_level }}
+        format {{ settings.log_format }}
     }
 }
 

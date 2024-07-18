@@ -9,6 +9,7 @@ from loguru import logger
 
 from firewhale import _internal
 from firewhale.settings import FirewhaleSettings
+from firewhale.types import LogLevel
 
 settings = FirewhaleSettings()
 
@@ -47,7 +48,9 @@ def _start():
     )
 
     while True:
-        logger.debug(f"Updating Caddy configuration via admin API at {settings.caddy_admin_address}")
+        logger.debug(
+            f"Updating Caddy configuration via admin API at {settings.caddy_admin_address}"
+        )
 
         try:
             httpx.post(
@@ -57,7 +60,8 @@ def _start():
             ).raise_for_status()
         except httpx.ConnectError:
             logger.error(
-                f"Failed to reach Caddy's admin API at {settings.caddy_admin_address}. Please restart Firewhale.")
+                f"There was an error communicating with Caddy's admin API at {settings.caddy_admin_address}. Please restart Firewhale."
+            )
             exit(1)
 
         time.sleep(settings.reload_interval_seconds)
@@ -72,6 +76,7 @@ def main():
         sink=_internal.log_sink,
         serialize=True,
     )
+    logger.level(LogLevel.WARN, no=logger.level("WARNING").no)
 
 
 if __name__ == "__main__":

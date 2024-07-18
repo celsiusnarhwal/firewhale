@@ -4,6 +4,8 @@ import durationpy
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from firewhale.types import LogLevel, LogFormat
+
 
 class FirewhaleSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="FIREWHALE_")
@@ -13,7 +15,8 @@ class FirewhaleSettings(BaseSettings):
     http_status_code: int = Field(403, ge=100, le=599)
     reload_interval: str = "30s"
     label_prefix: str = "firewhale"
-    log_level: t.Literal["INFO", "WARN", "ERROR", "DEBUG"] = "INFO"
+    log_level: LogLevel = LogLevel.INFO
+    log_format: LogFormat = LogFormat.JSON
 
     dev_mode: bool = False
     dev_docker_opts: t.Optional[dict] = None

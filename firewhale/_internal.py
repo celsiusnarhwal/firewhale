@@ -1,13 +1,17 @@
 import json
 import sys
-import typing as t
 from pathlib import Path
 
+import pendulum
 from docker import DockerClient
 from jinja2 import Environment, FileSystemLoader
+from loguru import logger
+from rich.console import Console
+from rich.padding import Padding
+from rich.table import Table
 
 from firewhale.settings import FirewhaleSettings
-from loguru import logger
+from firewhale.types import LogLevel, Matcher, LogFormat
 
 settings = FirewhaleSettings()
 
@@ -22,23 +26,18 @@ def generate():
     """
     Generate a Caddy configuration for Firewhale.
     """
-
-    class Matcher(t.TypedDict):
-        name: str
-        rules: list
-
     if settings.dev_mode and settings.dev_docker_opts:
         dc = DockerClient(**settings.dev_docker_opts)
     else:
         dc = DockerClient("unix:///var/run/docker.sock")
 
-    logger.debug(f"Connected to Docker Engine via {dc.api.base_url}")
+    logger.debug(f"Connected to Docker Engine")
 
     allowed_containers = []
     matchers = []
 
     for container in dc.containers.list():
-        logger.debug(f'Determining access for container "{container.name}"')
+        logger.debug(f'Determining access for {container.name}')
 
         read_label = container.labels.get(f"{settings.label_prefix}.read")
         write_label = container.labels.get(f"{settings.label_prefix}.write")
@@ -57,12 +56,14 @@ def generate():
 
                 if "all" not in readable_endpoints:
                     logger.debug(
-                        f'Granting container "{container.name}" read access to: '
+                        f'Granting {container.name} read access to: '
                         + ", ".join([f"/{endpoint}" for endpoint in readable_endpoints])
                     )
                     rules.append("vars {endpoint} " + " ".join(readable_endpoints))
                 else:
-                    logger.debug(f'Granting container "{container.name}" read access to all endpoints')
+                    logger.debug(
+                        f'Granting {container.name} read access to all endpoints'
+                    )
 
                 matchers.append(Matcher(name=f"{container.name}_read", rules=rules))
 
@@ -77,28 +78,35 @@ def generate():
 
                 if "all" not in writeable_endpoints:
                     logger.debug(
-                        f'Granting container "{container.name}" read access to: '
-                        + ", ".join([f"/{endpoint}" for endpoint in writeable_endpoints])
+                        f'Granting "{container.name}" read access to: '
+                        + ", ".join(
+                            [f"/{endpoint}" for endpoint in writeable_endpoints]
+                        )
                     )
 
                     rules.append("vars {endpoint} " + " ".join(writeable_endpoints))
                 else:
-                    logger.debug(f'Granting container "{container.name}" write access to all endpoints')
+                    logger.debug(
+                        f'Granting {container.name} write access to all endpoints'
+                    )
 
                 matchers.append(Matcher(name=f"{container.name}_write", rules=rules))
         else:
-            logger.debug(f"No access granted to container {container.name}")
+            logger.debug(f'No access granted to {container.name}')
 
     # Write a request matcher for /events, /_ping, and /version
     if allowed_containers:
         container_names = [ctr.name for ctr in allowed_containers]
-        logger.debug(f"Granting read access to /events, /_ping, and /version to: {", ".join(container_names)}")
+        logger.debug(
+            "Granting read access to /events, /_ping, and /version to: "
+            + ", ".join(container_names)
+        )
 
         matchers.append(
             Matcher(
                 name="events_ping_version",
                 rules=[
-                    f"remote_host {" ".join([ctr.name for ctr in allowed_containers])}",
+                    "remote_host " + " ".join(container_names),
                     "method GET HEAD",
                     "vars {endpoint} events _ping version",
                 ],
@@ -115,11 +123,38 @@ def generate():
 def log_sink(log: str):
     record = json.loads(log)["record"]
 
-    log = {
-        "level": record["level"]["name"].lower(),
-        "ts": record["time"]["timestamp"],
-        "logger": "firewhale",
-        "msg": record["message"],
-    }
+    level: str = record["level"]["name"]
+    timestamp: float = record["time"]["timestamp"]
+    name: str = "firewhale"
+    message: str = record["message"]
 
-    print(json.dumps(log), file=sys.stderr)
+    if settings.log_format is LogFormat.JSON:
+        log = {
+            "level": level.lower(),
+            "ts": timestamp,
+            "logger": name,
+            "msg": message,
+        }
+
+        print(json.dumps(log), file=sys.stderr)
+    else:
+        time = pendulum.from_timestamp(record["time"]["timestamp"]).format(
+            "YYYY/MM/DD HH:mm:ss.SSS"
+        )
+        level_color = {
+            LogLevel.DEBUG: "violet",
+            LogLevel.INFO: "blue",
+            LogLevel.WARN: "yellow",
+            LogLevel.ERROR: "red",
+        }[level]
+
+        table = Table().grid()
+        table.add_row(
+            Padding(time, (0, 1, 0, 0)),
+            Padding(f"[{level_color}]{level}[/]", (0, 8 - len(level), 0, 0)),
+            Padding(name, (0, 3, 0, 0)),
+            message,
+        )
+
+        console = Console(stderr=True, width=16 * 1024)
+        console.print(table)
