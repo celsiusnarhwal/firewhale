@@ -158,14 +158,15 @@ docker exec firewhale firewhale view
 ### Using the Caddy API
 
 By default, Caddy's [admin API](https://caddyserver.com/docs/api) is available inside Firewhale's container at
-`localhost:2019`.
+`localhost:2019`. You can use this to view Firewhale's configuration in Caddy's canonical JSON.
 
 ```shell
-docker exec firewhale curl -s localhost:2019
+docker exec firewhale curl -s localhost:2019/config/
 ```
 
-> [!WARNING]
-> Any configuration changes made via the admin API will be lost when Firewhale's container is restarted or recreated.
+> [!CAUTION]
+> Avoid making configuration changes via the Caddy API. They'll be lost when Firewhale's container is restarted
+> or recreated.
 
 ## Docker API Compatibility
 
