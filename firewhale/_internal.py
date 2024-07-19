@@ -2,6 +2,7 @@ import json
 import sys
 from pathlib import Path
 
+import inflect as ifl
 import pendulum
 from docker import DockerClient
 from jinja2 import Environment, FileSystemLoader
@@ -21,6 +22,8 @@ jinja = Environment(
     lstrip_blocks=True,
 )
 
+inflect = ifl.engine()
+
 
 def generate():
     """
@@ -37,7 +40,7 @@ def generate():
     matchers = []
 
     for container in dc.containers.list():
-        logger.debug(f'Determining access for {container.name}')
+        logger.debug(f"Determining access for {container.name}")
 
         read_label = container.labels.get(f"{settings.label_prefix}.read")
         write_label = container.labels.get(f"{settings.label_prefix}.write")
@@ -56,13 +59,15 @@ def generate():
 
                 if "all" not in readable_endpoints:
                     logger.debug(
-                        f'Granting {container.name} read access to: '
-                        + ", ".join([f"/{endpoint}" for endpoint in readable_endpoints])
+                        f"Granting {container.name} read access to "
+                        + inflect.join(
+                            [f"/{endpoint}" for endpoint in readable_endpoints]
+                        )
                     )
                     rules.append("vars {endpoint} " + " ".join(readable_endpoints))
                 else:
                     logger.debug(
-                        f'Granting {container.name} read access to all endpoints'
+                        f"Granting {container.name} read access to all endpoints"
                     )
 
                 matchers.append(Matcher(name=f"{container.name}_read", rules=rules))
@@ -78,28 +83,26 @@ def generate():
 
                 if "all" not in writeable_endpoints:
                     logger.debug(
-                        f'Granting "{container.name}" read access to: '
-                        + ", ".join(
+                        f"Granting {container.name} write access to "
+                        + inflect.join(
                             [f"/{endpoint}" for endpoint in writeable_endpoints]
                         )
                     )
-
                     rules.append("vars {endpoint} " + " ".join(writeable_endpoints))
                 else:
                     logger.debug(
-                        f'Granting {container.name} write access to all endpoints'
+                        f"Granting {container.name} write access to all endpoints"
                     )
 
                 matchers.append(Matcher(name=f"{container.name}_write", rules=rules))
         else:
-            logger.debug(f'No access granted to {container.name}')
+            logger.debug(f"No access granted to {container.name}")
 
     # Write a request matcher for /events, /_ping, and /version
     if allowed_containers:
         container_names = [ctr.name for ctr in allowed_containers]
         logger.debug(
-            "Granting read access to /events, /_ping, and /version to: "
-            + ", ".join(container_names)
+            f"Granting read access to /events, /_ping, and /version to {inflect.join(container_names)}"
         )
 
         matchers.append(
@@ -121,9 +124,10 @@ def generate():
 
 
 def log_sink(log: str):
+    # Since Caddy is the only other thing logging to the container, we try our best to mimic its log structure.
     record = json.loads(log)["record"]
 
-    level: str = record["level"]["name"]
+    level: LogLevel = LogLevel(record["level"]["name"])
     timestamp: float = record["time"]["timestamp"]
     name: str = "firewhale"
     message: str = record["message"]
@@ -148,7 +152,7 @@ def log_sink(log: str):
             LogLevel.ERROR: "red",
         }[level]
 
-        table = Table().grid()
+        table = Table.grid()
         table.add_row(
             Padding(time, (0, 1, 0, 0)),
             Padding(f"[{level_color}]{level}[/]", (0, 8 - len(level), 0, 0)),
@@ -156,5 +160,8 @@ def log_sink(log: str):
             message,
         )
 
-        console = Console(stderr=True, width=16 * 1024)
+        console = Console(stderr=True, width=10**100)
         console.print(table)
+
+    if level is LogLevel.ERROR:
+        sys.exit(1)

@@ -53,16 +53,25 @@ def _start():
         )
 
         try:
-            httpx.post(
+            resp = httpx.post(
                 f"http://{settings.caddy_admin_address}/load",
                 headers={"Content-Type": "text/caddyfile"},
                 content=_internal.generate(),
-            ).raise_for_status()
+            )
         except httpx.ConnectError:
             logger.error(
-                f"There was an error communicating with Caddy's admin API at {settings.caddy_admin_address}. Please restart Firewhale."
+                f"There was an error communicating with Caddy's admin API at {settings.caddy_admin_address}. "
+                f"Please restart Firewhale."
             )
-            exit(1)
+        else:
+            try:
+                resp.raise_for_status()
+            except httpx.HTTPStatusError:
+                logger.error(
+                    f"Firewhale received an unexpected status code "
+                    f"({resp.status_code} {httpx.codes.get_reason_phrase(resp.status_code)}) while communicating with "
+                    f"Caddy's admin API. Please restart Firewhale."
+                )
 
         time.sleep(settings.reload_interval_seconds)
         logger.info("Reloading configuration")
@@ -72,11 +81,10 @@ def _start():
 def main():
     logger.remove()
     logger.add(
-        level=settings.log_level,
+        level="WARNING" if settings.log_level is LogLevel.WARN else settings.log_level,
         sink=_internal.log_sink,
         serialize=True,
     )
-    logger.level(LogLevel.WARN, no=logger.level("WARNING").no)
 
 
 if __name__ == "__main__":

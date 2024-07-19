@@ -16,6 +16,7 @@ loguru = "^0.7.2"
 pydantic-settings = "^2.3.4"
 dict-deep = "^4.1.2"
 pendulum = "^3.0.0"
+inflect = "^7.3.1"
 
 [tool.poetry.scripts]
 firewhale = "firewhale.cli:app"
