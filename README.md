@@ -46,8 +46,8 @@ see and do.
 
 ## How?
 
-Firewhale is built on top of [Caddy](https://caddyserver.com)
-and dynamically generates a [Caddyfile](https://caddyserver.com/docs/caddyfile) using Docker service labels.
+Firewhale is built on top of [Caddy](https://caddyserver.com). It reads Docker service labels to determine which Docker API endpoints
+services are and aren't allowed to access and generates a [Caddyfile](https://caddyserver.com/docs/caddyfile) that enforces those rules.
 
 ## Usage
 
