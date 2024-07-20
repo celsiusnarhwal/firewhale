@@ -97,7 +97,7 @@ services:
 ```
 
 <details>
-    <summary>Example Caddyfile</summary>
+    <summary>See the generated Caddyfile</summary>
 
 <br>
 
@@ -191,7 +191,7 @@ services:
 ```
 
 <details>
-<summary>Example Caddyfile</summary>
+<summary>See the generated Caddyfile</summary>
 
 <br>
 
