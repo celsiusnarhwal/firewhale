@@ -4,7 +4,7 @@ import durationpy
 from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from firewhale.types import LogLevel, LogFormat
+from firewhale.types import LogFormat, LogLevel
 
 
 class FirewhaleSettings(BaseSettings):

@@ -12,7 +12,7 @@ from rich.padding import Padding
 from rich.table import Table
 
 from firewhale.settings import FirewhaleSettings
-from firewhale.types import LogLevel, Matcher, LogFormat
+from firewhale.types import LogFormat, LogLevel, Matcher
 
 settings = FirewhaleSettings()
 
