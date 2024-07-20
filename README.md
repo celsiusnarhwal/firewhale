@@ -299,7 +299,7 @@ Some aspects of Firewhale can be configured via environment variables.
 
 If you use [Watchtower](https://containrrr.dev/watchtower), it's important to make sure that either:
 
-- a) Watchtower does _not_ use Firewhale as its Docker daemon socket, or
+- a) Watchtower does _not_ use Firewhale as its Docker host, or
 - b) Firewhale is exempted from Watchtower's update routine.
 
 If Watchtower tries to update Firewhale while using it as its Docker daemon socket, it will lose access to the Docker
