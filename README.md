@@ -264,7 +264,7 @@ docker exec firewhale curl -s localhost:2019/config/
 
 ## Docker API Compatibility
 
-Firewhale supports all versions of the Docker API that are also supported by Docker's
+Firewhale supports all versions of the Docker API that are supported by Docker's
 [official Python SDK](https://github.com/docker/docker-py).
 
 ## Configuration
