@@ -99,46 +99,46 @@ services:
 <details>
     <summary>Example Caddyfile</summary>
 
-    ```
-    :80 {
-        map {path} {endpoint} {
-            ~^(?:\/v[0-9.]+)?\/([^\/?]+) "${1}"
-        }
-    
-        @foobar_read {
-            remote_host foobar
-            method GET HEAD
-            vars {endpoint} containers images info
-        }
-    
-        handle @foobar_read {
-            reverse_proxy unix//var/run/docker.sock
-        }
-    
-        @foobar_write {
-            remote_host foobar
-            vars {endpoint} networks volumes
-        }
-    
-        handle @foobar_write {
-            reverse_proxy unix//var/run/docker.sock
-        }
-    
-        @events_ping_version {
-            remote_host foobar
-            method GET HEAD
-            vars {endpoint} events _ping version
-        }
-    
-        handle @events_ping_version {
-            reverse_proxy unix//var/run/docker.sock
-        }
-    
-        handle {
-            respond 403
-        }
+```
+:80 {
+    map {path} {endpoint} {
+        ~^(?:\/v[0-9.]+)?\/([^\/?]+) "${1}"
     }
-    ```
+
+    @foobar_read {
+        remote_host foobar
+        method GET HEAD
+        vars {endpoint} containers images info
+    }
+
+    handle @foobar_read {
+        reverse_proxy unix//var/run/docker.sock
+    }
+
+    @foobar_write {
+        remote_host foobar
+        vars {endpoint} networks volumes
+    }
+
+    handle @foobar_write {
+        reverse_proxy unix//var/run/docker.sock
+    }
+
+    @events_ping_version {
+        remote_host foobar
+        method GET HEAD
+        vars {endpoint} events _ping version
+    }
+
+    handle @events_ping_version {
+        reverse_proxy unix//var/run/docker.sock
+    }
+
+    handle {
+        respond 403
+    }
+}
+```
 
 </details>
 
@@ -191,45 +191,45 @@ services:
 <details>
 <summary>Example Caddyfile</summary>
 
-    ```
-    :80 {
-        map {path} {endpoint} {
-            ~^(?:\/v[0-9.]+)?\/([^\/?]+) "${1}"
-        }
-    
-        @foobar_read {
-            remote_host foobar
-            method GET HEAD
-        }
-    
-        handle @foobar_read {
-            reverse_proxy unix//var/run/docker.sock
-        }
-    
-        @foobar_write {
-            remote_host foobar
-            vars {endpoint} containers images
-        }
-    
-        handle @foobar_write {
-            reverse_proxy unix//var/run/docker.sock
-        }
-    
-        @events_ping_version {
-            remote_host foobar
-            method GET HEAD
-            vars {endpoint} events _ping version
-        }
-    
-        handle @events_ping_version {
-            reverse_proxy unix//var/run/docker.sock
-        }
-    
-        handle {
-            respond 403
-        }
+```
+:80 {
+    map {path} {endpoint} {
+        ~^(?:\/v[0-9.]+)?\/([^\/?]+) "${1}"
     }
-    ```
+
+    @foobar_read {
+        remote_host foobar
+        method GET HEAD
+    }
+
+    handle @foobar_read {
+        reverse_proxy unix//var/run/docker.sock
+    }
+
+    @foobar_write {
+        remote_host foobar
+        vars {endpoint} containers images
+    }
+
+    handle @foobar_write {
+        reverse_proxy unix//var/run/docker.sock
+    }
+
+    @events_ping_version {
+        remote_host foobar
+        method GET HEAD
+        vars {endpoint} events _ping version
+    }
+
+    handle @events_ping_version {
+        reverse_proxy unix//var/run/docker.sock
+    }
+
+    handle {
+        respond 403
+    }
+}
+```
 
 </details>
 
