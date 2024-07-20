@@ -260,8 +260,7 @@ docker exec firewhale curl -s localhost:2019/config/
 ```
 
 > [!CAUTION]
-> Avoid making configuration changes via the Caddy API. They'll be lost when Firewhale's container is restarted
-> or recreated.
+> Avoid making configuration changes via the Caddy API. They'll be lost when Firewhale reloads its configuration.
 
 ## Docker API Compatibility
 
