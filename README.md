@@ -288,7 +288,7 @@ Some aspects of Firewhale can be configured via environment variables.
   This shouldn't be an issue if you're using Docker Compose, where such networks are the default for services that
   aren't explicitly defined to use something else.
 - You don't need to, and in fact shouldn't, publish any ports on Firewhale's container.
-- Firewhale can only communicate over plain HTTP. TLS connections aren't supported and aren't planned to be.
+- Firewhale only supports connections over plain HTTP. TLS connections aren't supported and aren't planned to be.
 - Firewhale does _not_ honor the following environment variables and setting them will have no effect:
   - `DOCKER_HOST`
   - `DOCKER_TLS_VERIFY`
