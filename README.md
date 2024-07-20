@@ -99,6 +99,8 @@ services:
 <details>
     <summary>Example Caddyfile</summary>
 
+The above Compose configuration would generate a Caddyfile similar to this:
+
 ```
 :80 {
     map {path} {endpoint} {
@@ -190,6 +192,8 @@ services:
 
 <details>
 <summary>Example Caddyfile</summary>
+
+The above Compose configuration would generate a Caddyfile similar to this:
 
 ```
 :80 {
