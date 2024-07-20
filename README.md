@@ -302,7 +302,7 @@ If you use [Watchtower](https://containrrr.dev/watchtower), it's important to ma
 - a) Watchtower does _not_ use Firewhale as its Docker host, or
 - b) Firewhale is exempted from Watchtower's update routine.
 
-If Watchtower tries to update Firewhale while using it as its Docker daemon socket, it will lose access to the Docker
+If Watchtower tries to update Firewhale while using it as its hot, it will lose access to the Docker
 API after stopping Firewhale and will not be able to complete its update routine. Naturally, this will break anything
 depending on Firewhale and any other containers Watchtower stopped during the update routine will be left as such.
 
