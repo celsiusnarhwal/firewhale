@@ -3,6 +3,7 @@ on:
     paths-ignore:
       - README.md
       - .gitignore
+      - .pre-commit-config.yaml
 
   release:
     types:
