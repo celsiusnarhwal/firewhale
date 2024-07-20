@@ -2,6 +2,7 @@ on:
   push:
     paths-ignore:
       - README.md
+      - .gitignore
 
   release:
     types:
