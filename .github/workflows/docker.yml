@@ -1,8 +1,9 @@
 on:
   push:
     paths-ignore:
+      - .*ignore
+      - "!.dockerignore"
       - README.md
-      - .gitignore
       - .pre-commit-config.yaml
 
   release:
