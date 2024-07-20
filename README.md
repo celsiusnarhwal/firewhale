@@ -92,12 +92,58 @@ services:
     environment:
       DOCKER_HOST: http://firewhale:2375
     labels:
-      firewhale.read: containers images networks volumes
-      firewhale.write: containers images
+      firewhale.read: containers images info
+      firewhale.write: networks volumes
 ```
 
-In this example, `foobar` has read access to the `containers`, `images`, `networks`, and `volumes` endpoints
-and write access to `containers` and `images`.
+<details>
+    <summary>Example Caddyfile</summary>
+
+    ```
+    :80 {
+        map {path} {endpoint} {
+            ~^(?:\/v[0-9.]+)?\/([^\/?]+) "${1}"
+        }
+    
+        @foobar_read {
+            remote_host foobar
+            method GET HEAD
+            vars {endpoint} containers images info
+        }
+    
+        handle @foobar_read {
+            reverse_proxy unix//var/run/docker.sock
+        }
+    
+        @foobar_write {
+            remote_host foobar
+            vars {endpoint} networks volumes
+        }
+    
+        handle @foobar_write {
+            reverse_proxy unix//var/run/docker.sock
+        }
+    
+        @events_ping_version {
+            remote_host foobar
+            method GET HEAD
+            vars {endpoint} events _ping version
+        }
+    
+        handle @events_ping_version {
+            reverse_proxy unix//var/run/docker.sock
+        }
+    
+        handle {
+            respond 403
+        }
+    }
+    ```
+
+</details>
+
+In this example, `foobar` has read access to the `containers` `images`, and `info`, endpoints
+and write access to `networks` and `volumes`.
 
 You can find an exhaustive list of endpoints in
 the [Docker Engine API documentation](https://docs.docker.com/engine/api/version-history/).
@@ -105,6 +151,13 @@ the [Docker Engine API documentation](https://docs.docker.com/engine/api/version
 > [!TIP]
 > Firewhale accepts endpoint names both with and without a leading forward slash (e.g., `containers` and `/containers`
 > are both valid).
+
+> [!IMPORTANT]
+> Read access to the [`events`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemEvents),
+> [`_ping`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemPing), and
+> [`version`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemVersion) endpoints is always granted,
+> whether or not you do so explicitly. The information returned by these endpoints is practically harmless, and most
+> services that hook into the Docker socket require these endpoints at a minimum.
 
 ### The `all` value
 
@@ -135,15 +188,53 @@ services:
       firewhale.write: containers images
 ```
 
+<details>
+<summary>Example Caddyfile</summary>
+
+    ```
+    :80 {
+        map {path} {endpoint} {
+            ~^(?:\/v[0-9.]+)?\/([^\/?]+) "${1}"
+        }
+    
+        @foobar_read {
+            remote_host foobar
+            method GET HEAD
+        }
+    
+        handle @foobar_read {
+            reverse_proxy unix//var/run/docker.sock
+        }
+    
+        @foobar_write {
+            remote_host foobar
+            vars {endpoint} containers images
+        }
+    
+        handle @foobar_write {
+            reverse_proxy unix//var/run/docker.sock
+        }
+    
+        @events_ping_version {
+            remote_host foobar
+            method GET HEAD
+            vars {endpoint} events _ping version
+        }
+    
+        handle @events_ping_version {
+            reverse_proxy unix//var/run/docker.sock
+        }
+    
+        handle {
+            respond 403
+        }
+    }
+    ```
+
+</details>
+
 In this example, `foobar` has read access to all endpoints and write access
 to `containers` and `images`.
-
-> [!IMPORTANT]
-> Read access to the [`events`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemEvents),
-> [`_ping`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemPing), and
-> [`version`](https://docs.docker.com/engine/api/v1.45/#tag/System/operation/SystemVersion) endpoints is always granted,
-> whether or not you do so explicitly. The information returned by these endpoints is practically harmless, and most
-> services that hook into the Docker socket require these endpoints at a minimum.
 
 ## Interacting with Firewhale
 
