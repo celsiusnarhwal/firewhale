@@ -240,7 +240,7 @@ services:
 In this example, `foobar` has read access to all endpoints and write access
 to `containers` and `images`.
 
-## Interacting with Firewhale
+## Command-line Interface
 
 ### Viewing the Caddyfile
 
