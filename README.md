@@ -99,7 +99,7 @@ services:
 <details>
     <summary>Example Caddyfile</summary>
 
-The above Compose configuration would generate a Caddyfile similar to this:
+<br>
 
 ```
 :80 {
@@ -193,7 +193,7 @@ services:
 <details>
 <summary>Example Caddyfile</summary>
 
-The above Compose configuration would generate a Caddyfile similar to this:
+<br>
 
 ```
 :80 {
