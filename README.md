@@ -84,7 +84,7 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
 
   foobar:
-    image: foobar
+    image: foobar:latest
     container_name: foobar
     restart: unless-stopped
     depends_on:
@@ -180,7 +180,7 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
 
   foobar:
-    image: foobar
+    image: foobar:latest
     container_name: foobar
     restart: unless-stopped
     environment:
