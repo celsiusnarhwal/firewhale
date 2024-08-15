@@ -56,7 +56,7 @@ Firewhale is designed to be used with [Docker Compose](https://docs.docker.com/c
 ```yaml
 services:
   firewhale:
-    image: ghcr.io/celsiusnarhwal/firewhale
+    image: ghcr.io/celsiusnarhwal/firewhale:latest
     container_name: firewhale
     restart: unless-stopped
   volumes:
@@ -77,14 +77,14 @@ Take a look at this example:
 ```yaml
 services:
   firewhale:
-    image: ghcr.io/celsiusnarhwal/firewhale
+    image: ghcr.io/celsiusnarhwal/firewhale:latest
     container_name: firewhale
     restart: unless-stopped
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
 
   foobar:
-    image: foobar
+    image: foobar:latest
     container_name: foobar
     restart: unless-stopped
     depends_on:
@@ -171,7 +171,7 @@ Iterating on the previous example:
 ```yaml
 services:
   firewhale:
-    image: ghcr.io/celsiusnarhwal/firewhale
+    image: ghcr.io/celsiusnarhwal/firewhale:latest
     container_name: firewhale
     restart: unless-stopped
     depends_on:
@@ -180,7 +180,7 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock
 
   foobar:
-    image: foobar
+    image: foobar:latest
     container_name: foobar
     restart: unless-stopped
     environment:
