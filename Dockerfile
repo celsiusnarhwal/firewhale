@@ -22,4 +22,6 @@ RUN poetry install --no-root --only main
 COPY . /app/
 RUN poetry install --only-root
 
+HEALTHCHECK CMD curl -f localhost:2019/config/
+
 CMD ["firewhale", "start"]
