@@ -32,7 +32,7 @@ Firewhale is a proxy for the Docker socket.
 
 Giving a service direct access to your Docker socket
 is [equivalent to giving it root access on your host](https://docs.docker.com/engine/security/#docker-daemon-attack-surface).
-However, some services require access to the Docker socket for various reasons. Using this proxy allows you to grant
+However, some services require access to the Docker socket for various reasons. Firewhale allows you to grant
 limited, per-service, access to the Docker socket, allowing you to control what individual services can and cannot
 see and do.
 
