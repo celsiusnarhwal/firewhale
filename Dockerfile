@@ -22,6 +22,6 @@ RUN poetry install --no-root --only main
 COPY . /app/
 RUN poetry install --only-root
 
-HEALTHCHECK CMD curl -f localhost:${FIREWHALE_CADDY_API_PORT:-2019}/config/
+HEALTHCHECK --interval=5s --timeout=10s CMD curl -f localhost:${FIREWHALE_CADDY_API_PORT:-2019}/config/
 
 CMD ["firewhale", "start"]
