@@ -14,7 +14,6 @@ class FirewhaleSettings(BaseSettings):
     caddy_api_port: int = Field(2019, ge=0, le=65535)
     http_status_code: int = Field(403, ge=100, le=599)
     reload_interval: str = "30s"
-    scan_all_containers: bool = False
     label_prefix: str = "firewhale"
     log_level: LogLevel = LogLevel.INFO
     log_format: LogFormat = LogFormat.JSON

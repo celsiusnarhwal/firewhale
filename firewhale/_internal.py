@@ -39,7 +39,7 @@ def generate():
     allowed_containers = []
     matchers = []
 
-    for container in dc.containers.list(all=settings.scan_all_containers):
+    for container in dc.containers.list():
         logger.debug(f"Determining access for {container.name}")
 
         read_label = container.labels.get(f"{settings.label_prefix}.read")
