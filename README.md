@@ -175,9 +175,6 @@ services:
     image: ghcr.io/celsiusnarhwal/firewhale:latest
     container_name: firewhale
     restart: unless-stopped
-    depends_on:
-      firewhale:
-        condition: service_healthy
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
 
@@ -185,6 +182,9 @@ services:
     image: foobar:latest
     container_name: foobar
     restart: unless-stopped
+    depends_on:
+      firewhale:
+        condition: service_healthy
     environment:
       DOCKER_HOST: http://firewhale:2375
     labels:
