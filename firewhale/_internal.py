@@ -34,7 +34,7 @@ def generate():
     else:
         dc = DockerClient("unix:///var/run/docker.sock")
 
-    logger.debug(f"Connected to Docker Engine")
+    logger.debug("Connected to Docker Engine")
 
     allowed_containers = []
     matchers = []
