@@ -1,5 +1,5 @@
 *
 !firewhale/
-!poetry.lock
+!uv.lock
 !pyproject.toml
-!.poetry-version
+!README.md

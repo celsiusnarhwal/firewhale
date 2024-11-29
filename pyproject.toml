@@ -1,31 +1,26 @@
-[tool.poetry]
+[project]
 name = "firewhale"
 version = "0.1.0"
-description = ""
-authors = ["celsius narhwal <hello@celsiusnarhwal.dev>"]
+readme = "README.md"
+authors = [
+	{ name = "celsius narhwal", email = "hello@celsiusnarhwal.dev" }
+]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "docker>=7.1.0",
+    "durationpy>=0.9",
+    "httpx>=0.28.0",
+    "inflect>=7.4.0",
+    "jinja2>=3.1.4",
+    "loguru>=0.7.2",
+    "pendulum>=3.0.0",
+    "pydantic-settings>=2.6.1",
+    "typer>=0.14.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-jinja2 = "^3.1.4"
-docker = "^7.1.0"
-pydantic = "^2.8.2"
-typer = { extras = ["all"], version = "^0.12.3" }
-durationpy = "^0.7"
-httpx = "^0.27.0"
-loguru = "^0.7.2"
-pydantic-settings = "^2.3.4"
-pendulum = "^3.0.0"
-inflect = "^7.3.1"
-
-[tool.poetry.scripts]
+[project.scripts]
 firewhale = "firewhale.cli:app"
 
-[tool.poetry.group.dev.dependencies]
-paramiko = "^3.4.0"
-
-[tool.black]
-target-version = ["py312"]
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
