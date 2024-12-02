@@ -1,6 +1,8 @@
 on:
   push:
     paths:
+      - Dockerfile
+      - .dockerignore
       - firewhale/**
       - uv.lock
       - pyproject.toml
