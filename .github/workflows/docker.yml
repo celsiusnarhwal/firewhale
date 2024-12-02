@@ -5,6 +5,7 @@ on:
       - uv.lock
       - pyproject.toml
       - README.md
+      - .github/workflows/docker.yml
 
   release:
     types:
