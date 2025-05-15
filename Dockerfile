@@ -10,7 +10,7 @@ COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 
 WORKDIR /app/
 
-COPY pyproject.toml uv.lock /app/
+COPY pyproject.toml uv.lock README.md /app/
 RUN uv sync
 
 COPY . /app/
