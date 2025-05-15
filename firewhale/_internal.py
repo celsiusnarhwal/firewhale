@@ -55,7 +55,7 @@ def generate():
                     for endpoint in read_label.split(" ")
                 ]
 
-                rules = [f"remote_host {container.name}", "method GET HEAD"]
+                rules = [f"remote_host nocache {container.name}", "method GET HEAD"]
 
                 if "all" not in readable_endpoints:
                     logger.debug(
@@ -79,7 +79,7 @@ def generate():
                     for endpoint in write_label.split(" ")
                 ]
 
-                rules = [f"remote_host {container.name}"]
+                rules = [f"remote_host nocache {container.name}"]
 
                 if "all" not in writeable_endpoints:
                     logger.debug(
@@ -107,9 +107,9 @@ def generate():
 
         matchers.append(
             Matcher(
-                name="events_ping_version",
+                name="basic",
                 rules=[
-                    "remote_host " + " ".join(container_names),
+                    "remote_host nocache " + " ".join(container_names),
                     "method GET HEAD",
                     "vars {endpoint} events _ping version",
                 ],
