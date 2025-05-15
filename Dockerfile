@@ -10,8 +10,10 @@ COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
 
 WORKDIR /app/
 
-COPY . /app/
+COPY pyproject.toml uv.lock /app/
 RUN uv sync
+
+COPY . /app/
 
 HEALTHCHECK CMD curl -f localhost:${FIREWHALE_CADDY_API_PORT:-2019}/config/
 
