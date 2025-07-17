@@ -65,7 +65,9 @@ def generate_caddyfile():
 
         if read_label or write_label:
             container_ips = [
-                network["IPAddress"] for network in shared_networks.values()
+                network["IPAddress"]
+                for network in shared_networks.values()
+                if network["IPAddress"]
             ]
 
             if not container_ips:
