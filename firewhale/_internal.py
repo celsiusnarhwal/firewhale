@@ -1,7 +1,9 @@
 import json
+import socket
 import sys
 from pathlib import Path
 
+import httpx
 import inflect as ifl
 import pendulum
 from docker import DockerClient
@@ -10,6 +12,7 @@ from loguru import logger
 from rich.console import Console
 from rich.padding import Padding
 from rich.table import Table
+from tenacity import retry, stop_after_attempt, wait_fixed
 
 from firewhale.settings import FirewhaleSettings
 from firewhale.types import LogFormat, LogLevel, Matcher
@@ -25,7 +28,7 @@ jinja = Environment(
 inflect = ifl.engine()
 
 
-def generate():
+def generate_caddyfile():
     """
     Generate a Caddy configuration for Firewhale.
     """
@@ -36,17 +39,47 @@ def generate():
 
     logger.debug("Connected to Docker Engine")
 
-    allowed_containers = []
+    self = dc.containers.get(socket.gethostname())
+
     matchers = []
 
     for container in dc.containers.list():
         logger.debug(f"Determining access for {container.name}")
 
+        self_networks = self.attrs["NetworkSettings"]["Networks"]
+        container_networks = container.attrs["NetworkSettings"]["Networks"]
+        shared_networks = {
+            network: info
+            for network, info in container_networks.items()
+            if network in self_networks
+        }
+
+        if not shared_networks:
+            logger.debug(
+                f"Skipping {container.name} because it does not share a network with Firewhale"
+            )
+            continue
+
         read_label = container.labels.get(f"{settings.label_prefix}.read")
         write_label = container.labels.get(f"{settings.label_prefix}.write")
 
         if read_label or write_label:
-            allowed_containers.append(container)
+            container_ips = [
+                network["IPAddress"] for network in shared_networks.values()
+            ]
+
+            if not container_ips:
+                logger.debug(
+                    f"Skipping {container.name} because it has no usable IP addresses"
+                )
+                continue
+
+            logger.debug(
+                f"{container.name} IP "
+                f"{inflect.plural('address', count=len(container_ips))} "
+                f"{inflect.plural('is', count=len(container_ips))} "
+                f"{inflect.join(container_ips)}"
+            )
 
             # Write a request matcher for readable endpoints
             if read_label:
@@ -55,7 +88,7 @@ def generate():
                     for endpoint in read_label.split(" ")
                 ]
 
-                rules = [f"remote_host {container.name}", "method GET HEAD"]
+                rules = [f"remote_ip {' '.join(container_ips)}", "method GET HEAD"]
 
                 if "all" not in readable_endpoints:
                     logger.debug(
@@ -79,7 +112,7 @@ def generate():
                     for endpoint in write_label.split(" ")
                 ]
 
-                rules = [f"remote_host {container.name}"]
+                rules = [f"remote_ip {' '.join(container_ips)}"]
 
                 if "all" not in writeable_endpoints:
                     logger.debug(
@@ -99,28 +132,42 @@ def generate():
             logger.debug(f"No access granted to {container.name}")
 
     # Write a request matcher for /events, /_ping, and /version
-    if allowed_containers:
-        container_names = [ctr.name for ctr in allowed_containers]
-        logger.debug(
-            f"Granting read access to /events, /_ping, and /version to {inflect.join(container_names)}"
+    matchers.append(
+        Matcher(
+            name="events_ping_version",
+            rules=[
+                "method GET HEAD",
+                "vars {endpoint} events _ping version",
+            ],
         )
-
-        matchers.append(
-            Matcher(
-                name="events_ping_version",
-                rules=[
-                    "remote_host " + " ".join(container_names),
-                    "method GET HEAD",
-                    "vars {endpoint} events _ping version",
-                ],
-            )
-        )
+    )
 
     logger.debug("Generating Caddyfile")
-    template = jinja.get_template("Caddyfile.template.txt")
+    template = jinja.get_template("Caddyfile.jinja")
     caddyfile = template.render(matchers=matchers, settings=settings)
 
     return caddyfile
+
+
+@retry(stop=stop_after_attempt(5), wait=wait_fixed(5))
+def apply_caddyfile(caddyfile):
+    try:
+        resp = httpx.post(
+            f"http://{settings.caddy_admin_address}/load",
+            headers={"Content-Type": "text/caddyfile"},
+            content=caddyfile,
+        )
+    except httpx.ConnectError:
+        logger.error(
+            f"Couldn't reach Caddy's admin API at {settings.caddy_admin_address}"
+        )
+    else:
+        try:
+            resp.raise_for_status()
+        except httpx.HTTPStatusError:
+            logger.error(
+                f"Recieved unexpected response from Caddy's admin API ({resp.status_code} {resp.reason_phrase})"
+            )
 
 
 def log_sink(log: str):

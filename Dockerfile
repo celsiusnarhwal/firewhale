@@ -1,12 +1,8 @@
-FROM caddy:2.8.4-builder AS caddy
-
-RUN xcaddy build --with github.com/muety/caddy-remote-host
-
-FROM ghcr.io/astral-sh/uv:0.5-debian
+FROM ghcr.io/astral-sh/uv:0.7-debian
 
 ENV PATH=/app/.venv/bin:${PATH}
 
-COPY --from=caddy /usr/bin/caddy /usr/bin/caddy
+COPY --from=caddy:2.8.4 /usr/bin/caddy /usr/bin/caddy
 
 WORKDIR /app/
 

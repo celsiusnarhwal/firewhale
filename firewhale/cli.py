@@ -1,13 +1,11 @@
 import os
 import subprocess
-import time
 from datetime import datetime
 
-import httpx
 import typer
 from loguru import logger
 
-from firewhale import _internal
+from firewhale import _internal, utils
 from firewhale.settings import FirewhaleSettings
 from firewhale.types import LogLevel
 
@@ -27,7 +25,7 @@ def view():
     """
     View Firewhale's current Caddyfile.
     """
-    print(_internal.generate())
+    print(_internal.generate_caddyfile())
 
 
 @app.command("start", hidden=True, add_help_option=False)
@@ -47,34 +45,16 @@ def _start():
         env={**os.environ, "CADDY_ADMIN": settings.caddy_admin_address},
     )
 
-    while True:
-        logger.debug(
-            f"Updating Caddy configuration via admin API at {settings.caddy_admin_address}"
-        )
+    dc = utils.get_docker_client()
 
-        try:
-            resp = httpx.post(
-                f"http://{settings.caddy_admin_address}/load",
-                headers={"Content-Type": "text/caddyfile"},
-                content=_internal.generate(),
-            )
-        except httpx.ConnectError:
-            logger.error(
-                f"There was an error communicating with Caddy's admin API at {settings.caddy_admin_address}. "
-                f"Please restart Firewhale."
-            )
-        else:
-            try:
-                resp.raise_for_status()
-            except httpx.HTTPStatusError:
-                logger.error(
-                    f"Firewhale received an unexpected status code "
-                    f"({resp.status_code} {httpx.codes.get_reason_phrase(resp.status_code)}) while communicating with "
-                    f"Caddy's admin API. Please restart Firewhale."
-                )
-
-        time.sleep(settings.reload_interval_seconds)
-        logger.info("Reloading configuration")
+    for event in dc.events(decode=True):
+        if event.get("Type") == "container" and event.get("Action") in [
+            "start",
+            "stop",
+        ]:
+            print(event)
+            caddyfile = _internal.generate_caddyfile()
+            _internal.apply_caddyfile(caddyfile)
 
 
 @app.callback()

@@ -1,4 +1,5 @@
 import typing as t
+from functools import lru_cache
 
 import durationpy
 from pydantic import Field, model_validator
@@ -56,3 +57,8 @@ class FirewhaleSettings(BaseSettings):
     def reload_interval_seconds(self):
         seconds = durationpy.from_str(self.reload_interval).total_seconds()
         return int(seconds) if seconds.is_integer() else seconds
+
+
+@lru_cache
+def settings() -> FirewhaleSettings:
+    return FirewhaleSettings()
