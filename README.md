@@ -17,15 +17,6 @@ Firewhale is a proxy for the Docker socket.
 
 </details>
 
-<details>
-<summary>Supported Architectures</summary>
-<br>
-
-- `amd64`
-- `arm64`
-
-</details>
-
 <hr>
 
 ## Why?
