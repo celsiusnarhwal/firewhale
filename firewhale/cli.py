@@ -52,7 +52,6 @@ def _start():
             "start",
             "stop",
         ]:
-            print(event)
             caddyfile = _internal.generate_caddyfile()
             _internal.apply_caddyfile(caddyfile)
 
